@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:conum/core/constants/countries.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/failures.dart';
@@ -12,9 +15,10 @@ class GetRandomCountryStats implements UseCase<CountryStats, NoParams> {
 
   @override
   Future<Either<Failure, CountryStats>> call(NoParams params) async {
-    // TODO: generate Random Country out of Country List
-    String country = 'Switzerland';
-
+    // Generates Random Country
+    final _random = Random();
+    String country =
+        Constants.countries[_random.nextInt(Constants.countries.length)];
     return await repository.getCountryStats(country);
   }
 }

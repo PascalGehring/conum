@@ -34,13 +34,13 @@ void main() {
     'should get CountryStats for random country from repository',
     () async {
       // arrange
-      when(mockCountryStatsRepository.getCountryStats(tCountry))
+      when(mockCountryStatsRepository.getCountryStats(any))
           .thenAnswer((_) async => Right(tCountryStats));
       // act
       final result = await usecase(NoParams());
       // assert
       expect(result, Right(tCountryStats));
-      verify(mockCountryStatsRepository.getCountryStats(tCountry));
+      verify(mockCountryStatsRepository.getCountryStats(any));
       verifyNoMoreInteractions(MockCountryStatsRepository());
     },
   );
