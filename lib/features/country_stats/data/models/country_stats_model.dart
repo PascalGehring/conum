@@ -1,4 +1,4 @@
-import 'package:conum/features/conum/domain/entities/country_stats.dart';
+import 'package:conum/features/country_stats/domain/entities/country_stats.dart';
 import 'package:flutter/material.dart';
 
 class CountryStatsModel extends CountryStats {

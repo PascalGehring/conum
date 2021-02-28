@@ -1,8 +1,8 @@
 import 'package:conum/core/usecases/usecase.dart';
-import 'package:conum/features/conum/domain/entities/country_stats.dart';
-import 'package:conum/features/conum/domain/repositories/country_stats_repository.dart';
-import 'package:conum/features/conum/domain/usecases/get_concrete_country_stats.dart';
-import 'package:conum/features/conum/domain/usecases/get_random_country_stats.dart';
+import 'package:conum/features/country_stats/domain/entities/country_stats.dart';
+import 'package:conum/features/country_stats/domain/repositories/country_stats_repository.dart';
+import 'package:conum/features/country_stats/domain/usecases/get_concrete_country_stats.dart';
+import 'package:conum/features/country_stats/domain/usecases/get_random_country_stats.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';

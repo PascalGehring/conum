@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:conum/features/conum/data/models/country_stats_model.dart';
-import 'package:conum/features/conum/domain/entities/country_stats.dart';
+import 'package:conum/features/country_stats/data/models/country_stats_model.dart';
+import 'package:conum/features/country_stats/domain/entities/country_stats.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../fixtures/fixture_reader.dart';
