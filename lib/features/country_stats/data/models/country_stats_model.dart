@@ -1,5 +1,7 @@
-import 'package:conum/features/country_stats/domain/entities/country_stats.dart';
+import '../../domain/entities/country_stats.dart';
 import 'package:flutter/material.dart';
+
+import '../../domain/entities/country_stats.dart';
 
 class CountryStatsModel extends CountryStats {
   CountryStatsModel({
@@ -24,11 +26,31 @@ class CountryStatsModel extends CountryStats {
     return CountryStatsModel(
       country: response['country'],
       population: response['population'],
-      totalCases: response['cases']['active'],
-      newCases: int.parse(response['cases']['new']),
-      totalDeaths: response['deaths']['total'],
-      newDeaths: int.parse(response['deaths']['new']),
-      criticalPatients: response['cases']['critical'],
+      totalCases:
+          response['cases']['active'] != null ? response['cases']['active'] : 0,
+      newCases: response['cases']['new'] != null
+          ? int.parse(response['cases']['new'])
+          : 0,
+      totalDeaths:
+          response['deaths']['total'] != null ? response['deaths']['total'] : 0,
+      newDeaths: response['deaths']['new'] != null
+          ? int.parse(response['deaths']['new'])
+          : 0,
+      criticalPatients: response['cases']['critical'] != null
+          ? response['cases']['critical']
+          : 0,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "country": country,
+      "population": population,
+      "totalCases": totalCases,
+      "newCases": newCases,
+      "totalDeaths": totalDeaths,
+      "newDeaths": newDeaths,
+      "criticalPatients": criticalPatients
+    };
   }
 }

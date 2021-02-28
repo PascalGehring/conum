@@ -11,10 +11,20 @@ void main() {
     country: 'Switzerland',
     population: 1,
     totalCases: 1,
-    newCases: 1,
+    newCases: -1,
     totalDeaths: 1,
     newDeaths: 1,
     criticalPatients: 1,
+  );
+
+  final tCountryStatsNullModel = CountryStatsModel(
+    country: 'Switzerland',
+    population: 1,
+    totalCases: 0,
+    newCases: 0,
+    totalDeaths: 0,
+    newDeaths: 0,
+    criticalPatients: 0,
   );
 
   test(
@@ -26,7 +36,7 @@ void main() {
   );
   group('fromJson', () {
     test(
-      'should return a valid model when the JSON has int values',
+      'should return a valid model when the JSON has int values (with prefix)',
       () async {
         // arrange
         final Map<String, dynamic> jsonMap = json.decode(fixture('stats.json'));
@@ -45,7 +55,28 @@ void main() {
         // act
         final result = CountryStatsModel.fromJson(jsonMap);
         // assert
-        expect(result, tCountryStatsModel);
+        expect(result, tCountryStatsNullModel);
+      },
+    );
+  });
+
+  group('toJson', () {
+    test(
+      'should return a JSON map containing the proper data',
+      () async {
+        // act
+        final result = tCountryStatsModel.toJson();
+        // assert
+        final expectedMap = {
+          "country": "Switzerland",
+          "population": 1,
+          "totalCases": 1,
+          "newCases": -1,
+          "totalDeaths": 1,
+          "newDeaths": 1,
+          "criticalPatients": 1
+        };
+        expect(result, expectedMap);
       },
     );
   });

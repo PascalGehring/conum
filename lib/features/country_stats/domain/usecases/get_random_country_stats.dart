@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:conum/core/constants/countries.dart';
 import 'package:dartz/dartz.dart';
 
+import '../../../../core/constants/countries.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../entities/country_stats.dart';
