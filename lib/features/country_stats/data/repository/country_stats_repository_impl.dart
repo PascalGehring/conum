@@ -1,3 +1,4 @@
+import 'package:conum/core/error/exceptions.dart';
 import 'package:conum/core/platform/network_info.dart';
 import 'package:conum/features/country_stats/data/datasources/country_stats_local_data_source.dart';
 import 'package:conum/features/country_stats/data/datasources/country_stats_remote_data_source.dart';
@@ -20,8 +21,19 @@ class CountryStatsRepositoryImpl implements CountryStatsRepository {
   });
 
   @override
-  Future<Either<Failure, CountryStats>> getCountryStats(String country) {
-    // TODO: implement getCountryStats
-    throw UnimplementedError();
+  Future<Either<Failure, CountryStats>> getCountryStats(String country) async {
+    bool isConnected = await networkInfo.isConnected;
+    if (isConnected) {
+      try {
+        final remoteStats = await remoteDataSource.getCountryStats(country);
+        localDataSource.cacheCountryStats(remoteStats);
+        return Right(remoteStats);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      final localStats = await localDataSource.getLastCountryStats();
+      return Right(localStats);
+    }
   }
 }
