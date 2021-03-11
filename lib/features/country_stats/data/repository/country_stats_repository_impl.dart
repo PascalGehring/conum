@@ -1,7 +1,7 @@
-import 'package:conum/core/error/exceptions.dart';
-import 'package:conum/core/platform/network_info.dart';
-import 'package:conum/features/country_stats/data/datasources/country_stats_local_data_source.dart';
-import 'package:conum/features/country_stats/data/datasources/country_stats_remote_data_source.dart';
+import '../../../../core/error/exceptions.dart';
+import '../../../../core/platform/network_info.dart';
+import '../datasources/country_stats_local_data_source.dart';
+import '../datasources/country_stats_remote_data_source.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 

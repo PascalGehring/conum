@@ -1,0 +1,9 @@
+{
+    "country": "Switzerland",
+    "population": 1,
+    "totalCases": 1,
+    "newCases": -1,
+    "totalDeaths": 1,
+    "newDeaths": 1,
+    "criticalPatients": 1
+  }
