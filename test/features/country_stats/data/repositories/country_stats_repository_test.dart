@@ -112,13 +112,26 @@ void main() {
         () async {
           // arrange
           when(mockLocalDataSource.getLastCountryStats())
-              .thenAnswer((realInvocation) async => tCountryStatsModel);
+              .thenAnswer((_) async => tCountryStatsModel);
           // act
           final result = await repository.getCountryStats(tCountry);
           // assert
           verifyZeroInteractions(mockRemoteDataSource);
           verify(mockLocalDataSource.getLastCountryStats());
           expect(result, equals(Right(tCountryStats)));
+        },
+      );
+      test(
+        'should return CacheFailure when there is no Cached data present',
+        () async {
+          // arrange
+          when(mockLocalDataSource.getLastCountryStats())
+              .thenThrow(CacheException());
+          final result = await repository.getCountryStats(tCountry);
+          // assert
+          verifyZeroInteractions(mockRemoteDataSource);
+          verify(mockLocalDataSource.getLastCountryStats());
+          expect(result, equals(Left(CacheFailure())));
         },
       );
     });
