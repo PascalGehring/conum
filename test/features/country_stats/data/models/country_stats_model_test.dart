@@ -34,14 +34,14 @@ void main() {
       expect(tCountryStatsModel, isA<CountryStats>());
     },
   );
-  group('fromJson', () {
+  group('fromRemoteJson', () {
     test(
       'should return a valid model when the JSON has int values (with prefix)',
       () async {
         // arrange
         final Map<String, dynamic> jsonMap = json.decode(fixture('stats.json'));
         // act
-        final result = CountryStatsModel.fromJson(jsonMap);
+        final result = CountryStatsModel.fromRemoteJson(jsonMap);
         // assert
         expect(result, tCountryStatsModel);
       },
@@ -53,9 +53,24 @@ void main() {
         final Map<String, dynamic> jsonMap =
             json.decode(fixture('stats_null.json'));
         // act
-        final result = CountryStatsModel.fromJson(jsonMap);
+        final result = CountryStatsModel.fromRemoteJson(jsonMap);
         // assert
         expect(result, tCountryStatsNullModel);
+      },
+    );
+  });
+
+  group('fromCachedJson', () {
+    test(
+      'should return a valid Model',
+      () async {
+        // arrange
+        final Map<String, dynamic> jsonMap =
+            json.decode(fixture('stats_cached.json'));
+        // act
+        final result = CountryStatsModel.fromLocalJson(jsonMap);
+        // assert
+        expect(result, tCountryStatsModel);
       },
     );
   });

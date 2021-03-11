@@ -1,10 +1,13 @@
 import 'dart:convert';
 
+import 'package:conum/core/error/exceptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:meta/meta.dart';
 
 import '../models/country_stats_model.dart';
 import '../models/country_stats_model.dart';
+
+const CACHED_COUNTRY_STATS = 'CACHED_COUNTRY_STATS';
 
 abstract class CountryStatsLocalDataSource {
   /// Gets the cached [CountryStatsModel] which was gotten the last time
@@ -23,14 +26,21 @@ class CountryStatsLocalDataSourceImpl implements CountryStatsLocalDataSource {
 
   @override
   Future<CountryStatsModel> getLastCountryStats() {
-    // TODO: implement getLastCountryStats
-    final jsonString = sharedPreferences.getString('CACHED_COUNTRY_STATS');
-    return Future.value(CountryStatsModel.fromJson(json.decode(jsonString)));
+    final jsonString = sharedPreferences.getString(CACHED_COUNTRY_STATS);
+
+    if (jsonString != null) {
+      return Future.value(
+          CountryStatsModel.fromLocalJson(json.decode(jsonString)));
+    } else {
+      throw CacheException();
+    }
   }
 
   @override
   Future<void> cacheCountryStats(CountryStatsModel countryToCache) {
-    // TODO: implement cacheCountryStats
-    throw UnimplementedError();
+    return sharedPreferences.setString(
+      CACHED_COUNTRY_STATS,
+      json.encode(countryToCache /*.toJson()*/),
+    );
   }
 }

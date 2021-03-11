@@ -21,7 +21,7 @@ class CountryStatsModel extends CountryStats {
             newDeaths: newDeaths,
             criticalPatients: criticalPatients);
 
-  factory CountryStatsModel.fromJson(Map<String, dynamic> json) {
+  factory CountryStatsModel.fromRemoteJson(Map<String, dynamic> json) {
     final Map<String, dynamic> response = json['response'][0];
     return CountryStatsModel(
       country: response['country'],
@@ -39,6 +39,18 @@ class CountryStatsModel extends CountryStats {
       criticalPatients: response['cases']['critical'] != null
           ? response['cases']['critical']
           : 0,
+    );
+  }
+
+  factory CountryStatsModel.fromLocalJson(Map<String, dynamic> json) {
+    return CountryStatsModel(
+      country: json['country'],
+      population: json['population'],
+      totalCases: json['totalCases'],
+      newCases: json['newCases'],
+      totalDeaths: json['totalDeaths'],
+      newDeaths: json['newDeaths'],
+      criticalPatients: json['criticalPatients'],
     );
   }
 
