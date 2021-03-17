@@ -1,6 +1,6 @@
 import 'package:conum/core/error/exceptions.dart';
 import 'package:conum/core/error/failures.dart';
-import 'package:conum/core/platform/network_info.dart';
+import 'package:conum/core/network/network_info.dart';
 import 'package:conum/features/country_stats/data/datasources/country_stats_local_data_source.dart';
 import 'package:conum/features/country_stats/data/datasources/country_stats_remote_data_source.dart';
 import 'package:conum/features/country_stats/data/models/country_stats_model.dart';
