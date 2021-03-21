@@ -54,6 +54,8 @@ class CountryStatsBloc extends Bloc<CountryStatsEvent, CountryStatsState> {
       yield Loading();
       final failureOrStats = await getRandomCountryStats(NoParams());
       yield* _eitherLoadedOrErrorState(failureOrStats);
+    } else if (event is ResetStateToEmpty) {
+      yield Empty();
     }
   }
 

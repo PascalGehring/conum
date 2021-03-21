@@ -17,3 +17,5 @@ class GetStatsForConcreteCountry extends CountryStatsEvent {
 }
 
 class GetStatsForRandomCountry extends CountryStatsEvent {}
+
+class ResetStateToEmpty extends CountryStatsEvent {}
