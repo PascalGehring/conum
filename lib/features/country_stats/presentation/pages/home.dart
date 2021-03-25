@@ -1,3 +1,4 @@
+import 'package:conum/features/country_stats/domain/entities/country_stats.dart';
 import 'package:conum/features/country_stats/presentation/bloc/country_stats_bloc.dart';
 import 'package:conum/features/country_stats/presentation/pages/country_page.dart';
 import 'package:conum/features/country_stats/presentation/pages/loading.dart';
@@ -16,14 +17,11 @@ class Home extends StatelessWidget {
         // ignore: missing_return
         builder: (BuildContext context, state) {
           if (state is Empty) {
-            return SearchPage();
+            return buildSearchPage();
           } else if (state is Loading) {
-            return LoadingIndicator();
+            return buildLoading();
           } else if (state is Loaded) {
-            return CountryPage(
-              countryStats: state.countryStats,
-              key: key,
-            );
+            return buildCountryPage(state.countryStats, key);
           } else if (state is Error) {
             return SearchPage();
           }
@@ -31,4 +29,19 @@ class Home extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget buildLoading() {
+  return LoadingIndicator();
+}
+
+Widget buildSearchPage() {
+  return SearchPage();
+}
+
+Widget buildCountryPage(CountryStats countryStats, Key key) {
+  return CountryPage(
+    countryStats: countryStats,
+    key: key,
+  );
 }

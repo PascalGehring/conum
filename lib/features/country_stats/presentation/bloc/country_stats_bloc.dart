@@ -17,7 +17,7 @@ part 'country_stats_state.dart';
 const String SERVER_FAILURE_MESSAGE = 'Server Failure';
 const String CACHE_FAILURE_MESSAGE = 'Cache Failure';
 const String INVALID_INPUT_FAILURE_MESSAGE =
-    'Das eingegebene Land existiert nicht';
+    'Das eingegebene Land existiert nicht.';
 
 class CountryStatsBloc extends Bloc<CountryStatsEvent, CountryStatsState> {
   final GetConreteCountryStats getConreteCountryStats;

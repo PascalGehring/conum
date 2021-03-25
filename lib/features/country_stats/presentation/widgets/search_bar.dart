@@ -30,7 +30,9 @@ class _SearchBarState extends State<SearchBar> {
               inputString = val;
             },
             onSubmitted: (val) {
-              dispatchConcrete(val);
+              if (val != '') {
+                dispatchConcrete(val);
+              }
             },
             controller: controller,
             textCapitalization: TextCapitalization.sentences,
@@ -55,7 +57,7 @@ class _SearchBarState extends State<SearchBar> {
           },
           itemBuilder: (context, suggestion) {
             return Text(
-              '$suggestion 🇰🇼',
+              '$suggestion',
               style: TextStyle(fontSize: 25),
             );
           },
