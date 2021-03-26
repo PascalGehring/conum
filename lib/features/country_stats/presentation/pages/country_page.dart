@@ -1,9 +1,8 @@
 import 'package:conum/features/country_stats/domain/entities/country_stats.dart';
-import 'package:conum/features/country_stats/presentation/bloc/country_stats_bloc.dart';
 import 'package:conum/features/country_stats/presentation/widgets/emoji.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class CountryPage extends StatelessWidget {
   final CountryStats countryStats;
@@ -13,11 +12,6 @@ class CountryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: CupertinoColors.white,
-      //   elevation: 0,
-      // ),
-
       body: SafeArea(
         child: Column(children: [
           SizedBox(
@@ -35,8 +29,7 @@ class CountryPage extends StatelessWidget {
                     size: 25,
                   ),
                   onPressed: (() {
-                    BlocProvider.of<CountryStatsBloc>(context)
-                        .add(ResetStateToEmpty());
+                    Navigator.pop(context);
                   })),
             ],
           ),
@@ -56,7 +49,8 @@ class CountryPage extends StatelessWidget {
                   child: FittedBox(
                     child: Text(
                       countryStats.country,
-                      style: TextStyle(fontWeight: FontWeight.w400),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, letterSpacing: -0.5),
                     ),
                   ),
                 ),
@@ -105,21 +99,29 @@ class NumberAndDescription extends StatelessWidget {
       children: [
         Text(
           description,
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(
+              fontSize: 20, fontWeight: FontWeight.w300, letterSpacing: -0.5),
         ),
         Text(
-          number.toString(),
-          style: TextStyle(fontSize: 40),
+          _formatNumber(number),
+          style: TextStyle(
+              fontSize: 40, fontWeight: FontWeight.bold, letterSpacing: -0.5),
         ),
         Text(
           _addPrefixOrReturnBlank(difference),
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(
+              fontSize: 20, fontWeight: FontWeight.w300, letterSpacing: -0.5),
         ),
         SizedBox(
           height: 30,
         ),
       ],
     );
+  }
+
+  String _formatNumber(int number) {
+    final formatter = NumberFormat.decimalPattern('de_ch');
+    return formatter.format(number);
   }
 
   _addPrefixOrReturnBlank(int number) {

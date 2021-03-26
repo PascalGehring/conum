@@ -32,6 +32,7 @@ class CountryStatsRepositoryImpl implements CountryStatsRepository {
         return Left(ServerFailure());
       }
     } else {
+      return Left(OfflineFailure());
       try {
         final localStats = await localDataSource.getLastCountryStats();
         return Right(localStats);

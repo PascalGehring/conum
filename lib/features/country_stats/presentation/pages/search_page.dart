@@ -9,12 +9,7 @@ import 'package:flash/flash.dart';
 
 import '../../../../injection_container.dart';
 
-class SearchPage extends StatefulWidget {
-  @override
-  _SearchPageState createState() => _SearchPageState();
-}
-
-class _SearchPageState extends State<SearchPage> {
+class SearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final countryStatsBloc = BlocProvider.of<CountryStatsBloc>(context);
@@ -26,7 +21,8 @@ class _SearchPageState extends State<SearchPage> {
             cubit: countryStatsBloc,
             listener: (BuildContext context, CountryStatsState state) {
               if (state is Error) {
-                HapticFeedback.heavyImpact();
+                // HapticFeedback.heavyImpact();
+                HapticFeedback.mediumImpact();
                 showSnackBar(context, state.message);
                 countryStatsBloc.add(ResetStateToEmpty());
               }
@@ -46,7 +42,7 @@ class _SearchPageState extends State<SearchPage> {
                   child: GestureDetector(
                     onTap: () {
                       print('Random Stats');
-                      dispatchRandom();
+                      dispatchRandom(context);
                     },
                     child: Text(
                       'Random Country',
@@ -60,14 +56,8 @@ class _SearchPageState extends State<SearchPage> {
         ));
   }
 
-  void dispatchRandom() {
+  void dispatchRandom(BuildContext context) {
     BlocProvider.of<CountryStatsBloc>(context).add(GetStatsForRandomCountry());
-  }
-
-  void dispatchConcrete(String str) {
-    print('dispatchedConcrete with $str');
-    BlocProvider.of<CountryStatsBloc>(context)
-        .add(GetStatsForConcreteCountry(str));
   }
 }
 

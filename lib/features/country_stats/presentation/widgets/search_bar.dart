@@ -1,7 +1,5 @@
 import 'package:conum/core/constants/countries.dart';
-import 'package:conum/core/util/get_suggestions.dart';
 import 'package:conum/features/country_stats/presentation/bloc/country_stats_bloc.dart';
-import 'package:conum/features/country_stats/presentation/pages/country_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -25,14 +23,14 @@ class _SearchBarState extends State<SearchBar> {
       child: Material(
         elevation: 0,
         child: TypeAheadField(
+          hideOnLoading: true,
+          hideOnEmpty: true,
           textFieldConfiguration: TextFieldConfiguration(
             onChanged: (val) {
               inputString = val;
             },
             onSubmitted: (val) {
-              if (val != '') {
-                dispatchConcrete(val);
-              }
+              dispatchConcrete(val);
             },
             controller: controller,
             textCapitalization: TextCapitalization.sentences,
@@ -46,6 +44,11 @@ class _SearchBarState extends State<SearchBar> {
               fillColor: Colors.white,
               filled: true,
               border: InputBorder.none,
+              // OutlineInputBorder(
+              //   borderRadius: const BorderRadius.all(
+              //     const Radius.circular(20.0),
+              //   ),
+              // ),
               focusedBorder: InputBorder.none,
               enabledBorder: InputBorder.none,
               errorBorder: InputBorder.none,
@@ -56,9 +59,20 @@ class _SearchBarState extends State<SearchBar> {
             return _getSuggestions(str);
           },
           itemBuilder: (context, suggestion) {
-            return Text(
-              '$suggestion',
-              style: TextStyle(fontSize: 25),
+            return Container(
+              color: Colors.white,
+              height: 30,
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    '$suggestion',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ],
+              ),
             );
           },
           onSuggestionSelected: (suggestion) {
@@ -71,19 +85,24 @@ class _SearchBarState extends State<SearchBar> {
   }
 
   void dispatchConcrete(String str) {
-    BlocProvider.of<CountryStatsBloc>(widget.blocContext)
-        .add(GetStatsForConcreteCountry(str));
+    if (str != '') {
+      BlocProvider.of<CountryStatsBloc>(widget.blocContext)
+          .add(GetStatsForConcreteCountry(str));
+    }
   }
 }
 
 _getSuggestions(String str) {
-  List<dynamic> countries = Constants.countries;
+  if (str != '') {
+    List<dynamic> countries = Constants.countries;
 
-  List<dynamic> suggestionsList = countries
-      .where((element) => element.toLowerCase().startsWith(str.toLowerCase()))
-      .toList();
+    List<dynamic> suggestionsList = countries
+        .where((element) => element.toLowerCase().startsWith(str.toLowerCase()))
+        .take(5)
+        .toList();
 
-  return suggestionsList;
+    return suggestionsList;
+  }
 }
 
 

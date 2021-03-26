@@ -21,7 +21,7 @@ class Home extends StatelessWidget {
           } else if (state is Loading) {
             return buildLoading();
           } else if (state is Loaded) {
-            return buildCountryPage(state.countryStats, key);
+            return buildCountryPage(state.countryStats, key, context);
           } else if (state is Error) {
             return SearchPage();
           }
@@ -39,9 +39,20 @@ Widget buildSearchPage() {
   return SearchPage();
 }
 
-Widget buildCountryPage(CountryStats countryStats, Key key) {
-  return CountryPage(
-    countryStats: countryStats,
-    key: key,
+Widget buildCountryPage(
+    CountryStats countryStats, Key key, BuildContext context) {
+  return Navigator(
+    pages: [
+      MaterialPage(child: SearchPage()),
+      MaterialPage(
+          child: CountryPage(
+        countryStats: countryStats,
+        key: key,
+      ))
+    ],
+    onPopPage: (route, result) {
+      BlocProvider.of<CountryStatsBloc>(context).add(ResetStateToEmpty());
+      return route.didPop(result);
+    },
   );
 }

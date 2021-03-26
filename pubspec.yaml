@@ -32,6 +32,8 @@ dependencies:
   flutter_spinkit: "^4.1.2"
   # Snackbar
   flash: ^1.5.1
+  # Number Formatting
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

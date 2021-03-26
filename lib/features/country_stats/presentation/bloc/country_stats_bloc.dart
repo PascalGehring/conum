@@ -16,8 +16,8 @@ part 'country_stats_state.dart';
 
 const String SERVER_FAILURE_MESSAGE = 'Server Failure';
 const String CACHE_FAILURE_MESSAGE = 'Cache Failure';
-const String INVALID_INPUT_FAILURE_MESSAGE =
-    'Das eingegebene Land existiert nicht.';
+const String INVALID_INPUT_FAILURE_MESSAGE = 'The country does not exist.';
+const String OFFLINE_FAILURE_MESSAGE = 'You seem to be offline.';
 
 class CountryStatsBloc extends Bloc<CountryStatsEvent, CountryStatsState> {
   final GetConreteCountryStats getConreteCountryStats;
@@ -72,6 +72,8 @@ class CountryStatsBloc extends Bloc<CountryStatsEvent, CountryStatsState> {
         return SERVER_FAILURE_MESSAGE;
       case CacheFailure:
         return CACHE_FAILURE_MESSAGE;
+      case OfflineFailure:
+        return OFFLINE_FAILURE_MESSAGE;
       default:
         return 'Unexpected Error';
     }
