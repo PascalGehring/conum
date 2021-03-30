@@ -4,7 +4,9 @@ import 'package:dartz/dartz.dart';
 
 class InputConverter {
   Either<Failure, String> doesCountryExist(String str) {
-    if (Constants.countries.contains(str)) {
+    List<String> countries = Constants().getcountryList();
+
+    if (countries.contains(str)) {
       return Right(str);
     } else {
       return Left(InvalidInputFailure());

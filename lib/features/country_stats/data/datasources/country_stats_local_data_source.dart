@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:meta/meta.dart';
 
 import '../models/country_stats_model.dart';
-import '../models/country_stats_model.dart';
 
 const CACHED_COUNTRY_STATS = 'CACHED_COUNTRY_STATS';
 

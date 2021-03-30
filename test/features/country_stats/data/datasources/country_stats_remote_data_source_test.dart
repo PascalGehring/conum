@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 import 'package:conum/core/error/exceptions.dart';
-import 'package:conum/core/error/failures.dart';
 import 'package:conum/features/country_stats/data/datasources/country_stats_remote_data_source.dart';
 import 'package:conum/features/country_stats/data/models/country_stats_model.dart';
-import 'package:flutter/material.dart';
 import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;

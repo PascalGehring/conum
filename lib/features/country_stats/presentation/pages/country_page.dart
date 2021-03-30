@@ -120,15 +120,16 @@ class NumberAndDescription extends StatelessWidget {
   }
 
   String _formatNumber(int number) {
+    if (number == 0) {
+      return '-';
+    }
     final formatter = NumberFormat.decimalPattern('de_ch');
     return formatter.format(number);
   }
 
   _addPrefixOrReturnBlank(int number) {
-    if (number == null) {
-      return '';
-    } else if (number == 0) {
-      return '+0';
+    if (number == 0) {
+      return '-';
     } else if (!number.isNegative) {
       return '+$difference';
     }

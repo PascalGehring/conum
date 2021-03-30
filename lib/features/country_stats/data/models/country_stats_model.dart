@@ -1,8 +1,6 @@
 import '../../domain/entities/country_stats.dart';
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/country_stats.dart';
-
 class CountryStatsModel extends CountryStats {
   CountryStatsModel({
     @required String country,

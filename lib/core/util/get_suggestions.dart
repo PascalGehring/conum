@@ -3,7 +3,7 @@ import '../constants/countries.dart';
 class GetSuggestions {
   call(String str) {
     if (str != '') {
-      List<dynamic> countries = Constants.countries;
+      List<String> countries = Constants().getcountryList();
 
       List<dynamic> suggestionsList = countries
           .where(
