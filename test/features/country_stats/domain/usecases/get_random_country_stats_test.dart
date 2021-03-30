@@ -21,14 +21,14 @@ void main() {
 
   final tCountry = 'Switzerland';
   final tCountryStats = CountryStats(
-    country: tCountry,
-    population: 800,
-    totalCases: 1,
-    newCases: 1,
-    totalDeaths: 1,
-    newDeaths: 1,
-    criticalPatients: 1,
-  );
+      country: tCountry,
+      population: 1,
+      totalCases: 1,
+      newCases: 1,
+      totalDeaths: 1,
+      newDeaths: 1,
+      recovered: 1,
+      newRecovered: 1);
 
   test(
     'should get CountryStats for random country from repository',

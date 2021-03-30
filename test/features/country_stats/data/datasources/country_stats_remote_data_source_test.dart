@@ -22,6 +22,12 @@ void main() {
     dataSource = CountryStatsRemoteDataSourceImpl(client: mockHttpClient);
   });
 
+  String tCountry = 'Switzerland';
+  String tTime = '2021-03-29T00:00:00.000Z';
+
+  String url =
+      'https://webhooks.mongodb-stitch.com/api/client/v2.0/app/covid-19-qppza/service/REST-API/incoming_webhook/countries_summary?country=$tCountry&min_date=$tTime&max_date=$tTime';
+
   void setUpMockHttpClientSucess200() {
     when(mockHttpClient.get(any, headers: anyNamed('headers')))
         .thenAnswer((_) async => http.Response(fixture('stats.json'), 200));
@@ -47,11 +53,8 @@ void main() {
         dataSource.getCountryStats(tCountry);
         // assert
         verify(mockHttpClient.get(
-            'https://covid-193.p.rapidapi.com/statistics?country=$tCountry',
-            headers: {
-              'x-rapidapi-key':
-                  '44adf06adamshba38826ba7ceef2p12851djsnacfbc18c4ed7',
-            }));
+          url,
+        ));
       },
     );
     test(

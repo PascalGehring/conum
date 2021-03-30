@@ -41,14 +41,14 @@ void main() {
   group('GetStatsForConcreteCountry', () {
     final tCountry = 'Switzerland';
     final tCountryStats = CountryStats(
-      country: tCountry,
-      population: 800,
-      totalCases: 1,
-      newCases: 1,
-      totalDeaths: 1,
-      newDeaths: 1,
-      criticalPatients: 1,
-    );
+        country: tCountry,
+        population: 1,
+        totalCases: 1,
+        newCases: 1,
+        totalDeaths: 1,
+        newDeaths: 1,
+        recovered: 1,
+        newRecovered: 1);
 
     setUpMockInputConverterSucess() {
       when(mockInputConverter.doesCountryExist(any))
@@ -156,12 +156,13 @@ void main() {
   group('GetStatsForRandomCountry', () {
     final tCountryStats = CountryStats(
       country: 'Switzerland',
-      population: 800,
+      population: 1,
       totalCases: 1,
       newCases: 1,
       totalDeaths: 1,
       newDeaths: 1,
-      criticalPatients: 1,
+      recovered: 1,
+      newRecovered: 1,
     );
 
     test(

@@ -1,4 +1,5 @@
 import 'package:conum/core/constants/countries.dart';
+import 'package:conum/core/util/get_suggestions.dart';
 import 'package:conum/features/country_stats/presentation/bloc/country_stats_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -93,17 +94,5 @@ class _SearchBarState extends State<SearchBar> {
 }
 
 _getSuggestions(String str) {
-  if (str != '') {
-    List<dynamic> countries = Constants.countries;
-
-    List<dynamic> suggestionsList = countries
-        .where((element) => element.toLowerCase().startsWith(str.toLowerCase()))
-        .take(5)
-        .toList();
-
-    return suggestionsList;
-  }
+  return GetSuggestions()(str);
 }
-
-
-//OutlineInputBorder(borderRadius: BorderRadius.circular(25)),

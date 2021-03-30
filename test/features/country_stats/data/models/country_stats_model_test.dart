@@ -11,20 +11,11 @@ void main() {
     country: 'Switzerland',
     population: 1,
     totalCases: 1,
-    newCases: -1,
+    newCases: 1,
     totalDeaths: 1,
     newDeaths: 1,
-    criticalPatients: 1,
-  );
-
-  final tCountryStatsNullModel = CountryStatsModel(
-    country: 'Switzerland',
-    population: 1,
-    totalCases: 0,
-    newCases: 0,
-    totalDeaths: 0,
-    newDeaths: 0,
-    criticalPatients: 0,
+    recovered: 1,
+    newRecovered: 1,
   );
 
   test(
@@ -36,26 +27,14 @@ void main() {
   );
   group('fromRemoteJson', () {
     test(
-      'should return a valid model when the JSON has int values (with prefix)',
+      'should return a valid model when the JSON with the data present',
       () async {
         // arrange
-        final Map<String, dynamic> jsonMap = json.decode(fixture('stats.json'));
+        final List<dynamic> jsonList = json.decode(fixture('stats.json'));
         // act
-        final result = CountryStatsModel.fromRemoteJson(jsonMap);
+        final result = CountryStatsModel.fromRemoteJson(jsonList);
         // assert
         expect(result, tCountryStatsModel);
-      },
-    );
-    test(
-      'should return a valid model when the JSON has null values',
-      () async {
-        // arrange
-        final Map<String, dynamic> jsonMap =
-            json.decode(fixture('stats_null.json'));
-        // act
-        final result = CountryStatsModel.fromRemoteJson(jsonMap);
-        // assert
-        expect(result, tCountryStatsNullModel);
       },
     );
   });
@@ -86,10 +65,11 @@ void main() {
           "country": "Switzerland",
           "population": 1,
           "totalCases": 1,
-          "newCases": -1,
+          "newCases": 1,
           "totalDeaths": 1,
           "newDeaths": 1,
-          "criticalPatients": 1
+          "recovered": 1,
+          "newRecovered": 1
         };
         expect(result, expectedMap);
       },

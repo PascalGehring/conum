@@ -11,35 +11,31 @@ class CountryStatsModel extends CountryStats {
     @required int newCases,
     @required int totalDeaths,
     @required int newDeaths,
-    @required int criticalPatients,
+    @required int recovered,
+    @required int newRecovered,
   }) : super(
-            country: country,
-            population: population,
-            totalCases: totalCases,
-            newCases: newCases,
-            totalDeaths: totalDeaths,
-            newDeaths: newDeaths,
-            criticalPatients: criticalPatients);
+          country: country,
+          population: population,
+          totalCases: totalCases,
+          newCases: newCases,
+          totalDeaths: totalDeaths,
+          newDeaths: newDeaths,
+          recovered: recovered,
+          newRecovered: newRecovered,
+        );
 
-  factory CountryStatsModel.fromRemoteJson(Map<String, dynamic> json) {
-    final Map<String, dynamic> response = json['response'][0];
+  factory CountryStatsModel.fromRemoteJson(List<dynamic> jsonList) {
+    final Map<String, dynamic> json = jsonList[0];
+
     return CountryStatsModel(
-      country: response['country'],
-      population: response['population'],
-      totalCases:
-          response['cases']['active'] != null ? response['cases']['active'] : 0,
-      newCases: response['cases']['new'] != null
-          ? int.parse(response['cases']['new'])
-          : 0,
-      totalDeaths:
-          response['deaths']['total'] != null ? response['deaths']['total'] : 0,
-      newDeaths: response['deaths']['new'] != null
-          ? int.parse(response['deaths']['new'])
-          : 0,
-      criticalPatients: response['cases']['critical'] != null
-          ? response['cases']['critical']
-          : 0,
-    );
+        country: json['country'],
+        population: json['population'],
+        totalCases: json['confirmed'],
+        newCases: json['confirmed_daily'],
+        totalDeaths: json['deaths'],
+        newDeaths: json['deaths_daily'],
+        recovered: json['recovered'],
+        newRecovered: json['recovered_daily']);
   }
 
   factory CountryStatsModel.fromLocalJson(Map<String, dynamic> json) {
@@ -50,7 +46,8 @@ class CountryStatsModel extends CountryStats {
       newCases: json['newCases'],
       totalDeaths: json['totalDeaths'],
       newDeaths: json['newDeaths'],
-      criticalPatients: json['criticalPatients'],
+      recovered: json['recovered'],
+      newRecovered: json['newRecovered'],
     );
   }
 
@@ -62,7 +59,8 @@ class CountryStatsModel extends CountryStats {
       "newCases": newCases,
       "totalDeaths": totalDeaths,
       "newDeaths": newDeaths,
-      "criticalPatients": criticalPatients
+      "recovered": recovered,
+      "newRecovered": newRecovered,
     };
   }
 }

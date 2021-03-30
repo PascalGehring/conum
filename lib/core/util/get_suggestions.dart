@@ -1,17 +1,17 @@
-import 'package:conum/core/constants/countries.dart';
+import '../constants/countries.dart';
 
 class GetSuggestions {
-  final String str;
+  call(String str) {
+    if (str != '') {
+      List<dynamic> countries = Constants.countries;
 
-  GetSuggestions(this.str);
+      List<dynamic> suggestionsList = countries
+          .where(
+              (element) => element.toLowerCase().startsWith(str.toLowerCase()))
+          .take(5)
+          .toList();
 
-  call() {
-    List<dynamic> countries = Constants.countries;
-
-    List<dynamic> suggestionsList = countries
-        .where((element) => element.toLowerCase().startsWith(str.toLowerCase()))
-        .toList();
-
-    return suggestionsList;
+      return suggestionsList;
+    }
   }
 }

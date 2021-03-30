@@ -68,9 +68,9 @@ class CountryPage extends StatelessWidget {
                   difference: countryStats.newDeaths,
                 ),
                 NumberAndDescription(
-                  description: 'Critical',
-                  number: countryStats.criticalPatients,
-                  difference: null,
+                  description: 'Recovered',
+                  number: countryStats.recovered,
+                  difference: countryStats.newRecovered,
                 ),
               ],
             ),

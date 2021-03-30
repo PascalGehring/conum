@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:conum/core/error/exceptions.dart';
+import 'package:conum/core/util/date_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -21,12 +22,12 @@ class CountryStatsRemoteDataSourceImpl extends CountryStatsRemoteDataSource {
   CountryStatsRemoteDataSourceImpl({@required this.client});
   @override
   Future<CountryStatsModel> getCountryStats(String country) async {
+    final String time = DateManager().getDate();
+
+    //print(dateTime);
+
     final response = await client.get(
-        'https://covid-193.p.rapidapi.com/statistics?country=$country',
-        headers: {
-          'x-rapidapi-key':
-              '44adf06adamshba38826ba7ceef2p12851djsnacfbc18c4ed7',
-        });
+        'https://webhooks.mongodb-stitch.com/api/client/v2.0/app/covid-19-qppza/service/REST-API/incoming_webhook/countries_summary?country=$country&min_date=$time&max_date=$time');
 
     if (response.statusCode == 200) {
       return CountryStatsModel.fromRemoteJson(json.decode(response.body));
