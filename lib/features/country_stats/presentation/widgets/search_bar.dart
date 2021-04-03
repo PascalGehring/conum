@@ -1,97 +1,277 @@
+import 'package:conum/core/util/get_flag.dart';
 import 'package:conum/core/util/get_suggestions.dart';
 import 'package:conum/features/country_stats/presentation/bloc/country_stats_bloc.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class SearchBar extends StatefulWidget {
-  final BuildContext blocContext;
+  final BuildContext context;
 
-  const SearchBar({Key key, @required this.blocContext}) : super(key: key);
+  const SearchBar({Key key, @required this.context}) : super(key: key);
+
   @override
   _SearchBarState createState() => _SearchBarState();
 }
 
 class _SearchBarState extends State<SearchBar> {
-  final controller = TextEditingController();
-  String inputString;
+  TextEditingController controller = TextEditingController();
+  String value = '';
+  List<String> suggestions = [];
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(50.0, 50.0, 50.0, 20),
-      child: Material(
-        elevation: 0,
-        child: TypeAheadField(
-          hideOnLoading: true,
-          hideOnEmpty: true,
-          textFieldConfiguration: TextFieldConfiguration(
-            onChanged: (val) {
-              inputString = val;
-            },
-            onSubmitted: (val) {
-              dispatchConcrete(val);
-            },
-            controller: controller,
-            textCapitalization: TextCapitalization.sentences,
-            textAlign: TextAlign.center,
-            autofocus: false,
-            style: DefaultTextStyle.of(context)
-                .style
-                .copyWith(fontStyle: FontStyle.normal, fontSize: 20),
-            decoration: InputDecoration(
-              hintText: 'Search a country',
-              fillColor: Colors.white,
-              filled: true,
-              border: InputBorder.none,
-              // OutlineInputBorder(
-              //   borderRadius: const BorderRadius.all(
-              //     const Radius.circular(20.0),
-              //   ),
-              // ),
-              focusedBorder: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              errorBorder: InputBorder.none,
-              disabledBorder: InputBorder.none,
-            ),
-          ),
-          suggestionsCallback: (str) {
-            return _getSuggestions(str);
-          },
-          itemBuilder: (context, suggestion) {
-            return Container(
-              color: Colors.white,
-              height: 30,
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    '$suggestion',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ],
-              ),
-            );
-          },
-          onSuggestionSelected: (suggestion) {
-            print(suggestion);
-            dispatchConcrete(suggestion);
-          },
+    return AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        width: MediaQuery.of(context).size.width - 100,
+        height:
+            suggestions.isEmpty ? 50 : 66 + suggestions.length.toDouble() * 30,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(22),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey[300],
+              offset: Offset(1.0, 1.0), //(x,y)
+              blurRadius: 6.0,
+            )
+          ],
         ),
-      ),
-    );
+        child: Column(
+          children: [
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              SizedBox(
+                width: 20,
+              ),
+              Expanded(
+                child: Container(
+                  //color: Colors.green,
+                  child: TextField(
+                    controller: controller,
+                    textCapitalization: TextCapitalization.sentences,
+                    style: TextStyle(fontSize: 20),
+                    decoration: InputDecoration(
+                        border: InputBorder.none, hintText: 'Search a country'),
+                    onChanged: (str) {
+                      setState(() {
+                        value = str;
+                        if (str != '') {
+                          suggestions = _getSuggestions(str);
+                        } else {
+                          suggestions = [];
+                        }
+                      });
+                    },
+                    onSubmitted: (str) {
+                      dispatchConcrete(str);
+                    },
+                  ),
+                ),
+              ),
+              Icon(
+                Icons.search,
+                color: Colors.grey,
+              ),
+              SizedBox(
+                width: 12,
+              ),
+            ]),
+            Expanded(
+              child: ListView.builder(
+                  padding: EdgeInsets.only(top: 5),
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: suggestions.length,
+                  itemBuilder: (context, i) {
+                    if (suggestions.isNotEmpty) {
+                      return GestureDetector(
+                        onTap: () {
+                          dispatchConcrete(suggestions[i]);
+                        },
+                        child: Container(
+                          //height: 56,
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                controller.text,
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              Text(
+                                _handleLongCountries(suggestions[i]),
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                width: 3,
+                              ),
+                              Text(
+                                GetFlag().call(suggestions[i]),
+                                style: TextStyle(fontSize: 20),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+                    return null;
+                  }),
+            ),
+          ],
+        ));
   }
 
   void dispatchConcrete(String str) {
     if (str != '') {
-      BlocProvider.of<CountryStatsBloc>(widget.blocContext)
+      BlocProvider.of<CountryStatsBloc>(widget.context)
           .add(GetStatsForConcreteCountry(str));
     }
+  }
+
+  String _handleLongCountries(String str) {
+    if (str.length > 22) {
+      return '${str.substring(controller.text.length, 22)}...';
+    }
+
+    return str.substring(controller.text.length);
   }
 }
 
 _getSuggestions(String str) {
   return GetSuggestions()(str);
 }
+
+class Suggestions extends StatelessWidget {
+  final List<String> suggestions;
+  final TextEditingController controller;
+  final BuildContext context;
+
+  const Suggestions(
+      {Key key,
+      @required this.suggestions,
+      @required this.controller,
+      @required this.context})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ListView.builder(
+          itemCount: suggestions.length,
+          itemBuilder: (context, i) {
+            if (suggestions.isNotEmpty) {
+              return GestureDetector(
+                onTap: () {
+                  dispatchConcrete(suggestions[i]);
+                },
+                child: Container(
+                  height: 56,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        controller.text,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        _handleLongCountries(suggestions[i]),
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      SizedBox(
+                        width: 3,
+                      ),
+                      Text(
+                        GetFlag().call(suggestions[i]),
+                        style: TextStyle(fontSize: 20),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }
+            return null;
+          }),
+    );
+  }
+
+  void dispatchConcrete(String str) {
+    if (str != '') {
+      BlocProvider.of<CountryStatsBloc>(context)
+          .add(GetStatsForConcreteCountry(str));
+    }
+  }
+
+  String _handleLongCountries(String str) {
+    if (str.length > 22) {
+      return '${str.substring(controller.text.length, 22)}...';
+    }
+
+    return str.substring(controller.text.length);
+  }
+}
+
+
+
+
+
+
+
+// class GeSuggestions extends StatelessWidget {
+//   final List<String> suggestions;
+//   final TextEditingController controller;
+//   final Function dispatchConcrete;
+//   final Function handleLongCountries;
+
+//   GeSuggestions(
+//       {Key key,
+//       @required this.suggestions,
+//       @required this.controller,
+//       @required this.dispatchConcrete,
+//       @required this.handleLongCountries})
+//       : super(key: key);
+//   @override
+//   Widget build(BuildContext context) {
+//     List<Widget> suggestionsList = [];
+//     if (suggestions.isEmpty) {
+//       return [Container()];
+//     } else {
+//       for (int i = 0; i < suggestions.length; i++) {
+//         suggestionsList.add(GestureDetector(
+//           onTap: () {
+//             dispatchConcrete(suggestions[i]);
+//           },
+//           child: Container(
+//             //height: 56,
+//             child: Row(
+//               children: [
+//                 SizedBox(
+//                   width: 5,
+//                 ),
+//                 Text(
+//                   controller.text,
+//                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+//                 ),
+//                 Text(
+//                   handleLongCountries(suggestions[i]),
+//                   style: TextStyle(fontSize: 20),
+//                 ),
+//                 SizedBox(
+//                   width: 3,
+//                 ),
+//                 Text(
+//                   GetFlag().call(suggestions[i]),
+//                   style: TextStyle(fontSize: 20),
+//                 )
+//               ],
+//             ),
+//           ),
+//         ));
+//       }
+//     }
+//   }
+// }

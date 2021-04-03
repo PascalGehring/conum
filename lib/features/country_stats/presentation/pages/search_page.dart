@@ -26,30 +26,36 @@ class SearchPage extends StatelessWidget {
                 countryStatsBloc.add(ResetStateToEmpty());
               }
             },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Emoji(
-                  '🌐',
-                  size: 80,
-                ),
-                SearchBar(
-                  blocContext: context,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      print('Random Stats');
-                      dispatchRandom(context);
-                    },
-                    child: Text(
-                      'Random Country',
-                      style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+            child: SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(height: MediaQuery.of(context).size.height / 2.8),
+                    Emoji(
+                      '🌐',
+                      size: 80,
                     ),
-                  ),
-                )
-              ],
+                    SearchBar(
+                      context: context,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          print('Random Stats');
+                          dispatchRandom(context);
+                        },
+                        child: Text(
+                          'Random Country',
+                          style:
+                              TextStyle(fontSize: 16, color: Colors.grey[700]),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
         ));

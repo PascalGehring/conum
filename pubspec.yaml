@@ -34,6 +34,8 @@ dependencies:
   flash: ^1.5.1
   # Number Formatting
   intl: ^0.17.0
+  # Icons
+  font_awesome: ^5.10.1
 
 dev_dependencies:
   flutter_test:

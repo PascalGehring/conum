@@ -16,9 +16,8 @@ class GetRandomCountryStats implements UseCase<CountryStats, NoParams> {
   @override
   Future<Either<Failure, CountryStats>> call(NoParams params) async {
     // Generates Random Country
-    List<String> countries = Constants().getcountryList();
 
-    print(countries);
+    List<String> countries = Constants().countries;
 
     final _random = Random();
     String country = countries[_random.nextInt(countries.length)];

@@ -1,5 +1,5 @@
 class Constants {
-  List<String> countries0 = [
+  List<String> countries = [
     "Afghanistan",
     "Albania",
     "Algeria",
@@ -48,7 +48,7 @@ class Constants {
     "Cyprus",
     "Czechia",
     "Denmark",
-    "Diamond Princess",
+    //"Diamond Princess",
     "Djibouti",
     "Dominica",
     "Dominican Republic",
@@ -104,7 +104,7 @@ class Constants {
     "Liechtenstein",
     "Lithuania",
     "Luxembourg",
-    "MS Zaandam",
+    //"MS Zaandam",
     "Madagascar",
     "Malawi",
     "Malaysia",
@@ -391,7 +391,7 @@ class Constants {
 
   // this function does not work as excpected
 
-  getcountryList() {
+  get countryList {
     List<String> countries = [];
     countryMap.entries.forEach((element) {
       countries.add(element.key);
