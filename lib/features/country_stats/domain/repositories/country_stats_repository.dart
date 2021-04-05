@@ -5,4 +5,6 @@ import '../entities/country_stats.dart';
 
 abstract class CountryStatsRepository {
   Future<Either<Failure, CountryStats>> getCountryStats(String country);
+  Future<Either<Failure, CountryStats>> getCachedCountryStats();
+  Future<void> clearCachedCountryStats();
 }

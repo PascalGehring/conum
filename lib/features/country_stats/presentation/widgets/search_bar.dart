@@ -4,7 +4,6 @@ import 'package:conum/features/country_stats/presentation/bloc/country_stats_blo
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class SearchBar extends StatefulWidget {
   final BuildContext context;
@@ -50,9 +49,11 @@ class _SearchBarState extends State<SearchBar> {
                   child: TextField(
                     controller: controller,
                     textCapitalization: TextCapitalization.sentences,
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 18),
                     decoration: InputDecoration(
-                        border: InputBorder.none, hintText: 'Search a country'),
+                        border: InputBorder.none,
+                        hintText: 'Search a country',
+                        hintStyle: TextStyle(fontSize: 18)),
                     onChanged: (str) {
                       setState(() {
                         value = str;
@@ -97,19 +98,19 @@ class _SearchBarState extends State<SearchBar> {
                               ),
                               Text(
                                 controller.text,
-                                style: TextStyle(fontSize: 20),
+                                style: TextStyle(fontSize: 18),
                               ),
                               Text(
                                 _handleLongCountries(suggestions[i]),
                                 style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
+                                    fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                               SizedBox(
                                 width: 3,
                               ),
                               Text(
                                 GetFlag().call(suggestions[i]),
-                                style: TextStyle(fontSize: 20),
+                                style: TextStyle(fontSize: 18),
                               )
                             ],
                           ),
@@ -214,64 +215,3 @@ class Suggestions extends StatelessWidget {
     return str.substring(controller.text.length);
   }
 }
-
-
-
-
-
-
-
-// class GeSuggestions extends StatelessWidget {
-//   final List<String> suggestions;
-//   final TextEditingController controller;
-//   final Function dispatchConcrete;
-//   final Function handleLongCountries;
-
-//   GeSuggestions(
-//       {Key key,
-//       @required this.suggestions,
-//       @required this.controller,
-//       @required this.dispatchConcrete,
-//       @required this.handleLongCountries})
-//       : super(key: key);
-//   @override
-//   Widget build(BuildContext context) {
-//     List<Widget> suggestionsList = [];
-//     if (suggestions.isEmpty) {
-//       return [Container()];
-//     } else {
-//       for (int i = 0; i < suggestions.length; i++) {
-//         suggestionsList.add(GestureDetector(
-//           onTap: () {
-//             dispatchConcrete(suggestions[i]);
-//           },
-//           child: Container(
-//             //height: 56,
-//             child: Row(
-//               children: [
-//                 SizedBox(
-//                   width: 5,
-//                 ),
-//                 Text(
-//                   controller.text,
-//                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-//                 ),
-//                 Text(
-//                   handleLongCountries(suggestions[i]),
-//                   style: TextStyle(fontSize: 20),
-//                 ),
-//                 SizedBox(
-//                   width: 3,
-//                 ),
-//                 Text(
-//                   GetFlag().call(suggestions[i]),
-//                   style: TextStyle(fontSize: 20),
-//                 )
-//               ],
-//             ),
-//           ),
-//         ));
-//       }
-//     }
-//   }
-// }

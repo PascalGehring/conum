@@ -33,12 +33,21 @@ class CountryStatsRepositoryImpl implements CountryStatsRepository {
       }
     } else {
       return Left(OfflineFailure());
-      try {
-        final localStats = await localDataSource.getLastCountryStats();
-        return Right(localStats);
-      } on CacheException {
-        return Left(CacheFailure());
-      }
     }
+  }
+
+  @override
+  Future<Either<Failure, CountryStats>> getCachedCountryStats() async {
+    try {
+      final localStats = await localDataSource.getLastCountryStats();
+      return Right(localStats);
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<void> clearCachedCountryStats() async {
+    await localDataSource.clearCachedCountryStats();
   }
 }

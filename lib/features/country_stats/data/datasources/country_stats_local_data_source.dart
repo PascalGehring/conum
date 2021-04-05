@@ -10,12 +10,14 @@ const CACHED_COUNTRY_STATS = 'CACHED_COUNTRY_STATS';
 
 abstract class CountryStatsLocalDataSource {
   /// Gets the cached [CountryStatsModel] which was gotten the last time
-  /// the user had an interne connection.
+  /// the user had an internet connection.
   ///
   /// Throws [CacheException] if no cached data is present.
   Future<CountryStatsModel> getLastCountryStats();
 
   Future<void> cacheCountryStats(CountryStatsModel countryToCache);
+
+  Future<void> clearCachedCountryStats();
 }
 
 class CountryStatsLocalDataSourceImpl implements CountryStatsLocalDataSource {
@@ -41,5 +43,10 @@ class CountryStatsLocalDataSourceImpl implements CountryStatsLocalDataSource {
       CACHED_COUNTRY_STATS,
       json.encode(countryToCache /*.toJson()*/),
     );
+  }
+
+  @override
+  Future<void> clearCachedCountryStats() {
+    sharedPreferences.clear();
   }
 }

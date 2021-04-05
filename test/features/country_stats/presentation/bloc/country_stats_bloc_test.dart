@@ -14,23 +14,29 @@ class MockGetConreteCountryStats extends Mock
 
 class MockGetRandomCountryStats extends Mock implements GetRandomCountryStats {}
 
+class MockGetLastCountry extends Mock implements GetLastCountry {}
+
 class MockInputConverter extends Mock implements InputConverter {}
 
 void main() {
   CountryStatsBloc bloc;
   MockGetConreteCountryStats mockGetConreteCountryStats;
   MockGetRandomCountryStats mockGetRandomCountryStats;
+  MockGetLastCountry mockGetLastCountry;
   MockInputConverter mockInputConverter;
 
   setUp(() {
     mockGetConreteCountryStats = MockGetConreteCountryStats();
     mockGetRandomCountryStats = MockGetRandomCountryStats();
+    mockGetLastCountry = MockGetLastCountry();
     mockInputConverter = MockInputConverter();
 
     bloc = CountryStatsBloc(
-        concrete: mockGetConreteCountryStats,
-        random: mockGetRandomCountryStats,
-        inputConverter: mockInputConverter);
+      concrete: mockGetConreteCountryStats,
+      random: mockGetRandomCountryStats,
+      inputConverter: mockInputConverter,
+      //last: mockGetLastCountry,
+    );
   });
 
   test('initial State should be Empty', () {
@@ -226,6 +232,19 @@ void main() {
         expectLater(bloc, emitsInOrder(expected));
         // act
         bloc.add(GetStatsForRandomCountry());
+      },
+    );
+  });
+
+  group('GetLastCountry', () {
+    test(
+      'should emit [Loaded], when there is a country cached',
+      () async {
+        // arrange
+
+        // act
+
+        // assert
       },
     );
   });

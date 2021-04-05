@@ -42,20 +42,6 @@ void main() {
         CountryStatsModel.fromRemoteJson(json.decode(fixture('stats.json')));
 
     test(
-      '''should perform a GET request on a URL with ?Country as the endpoint 
-      and x-rapidapi-key header''',
-      () async {
-        //arrange
-        setUpMockHttpClientSucess200();
-        // act
-        dataSource.getCountryStats(tCountry);
-        // assert
-        verify(mockHttpClient.get(
-          url,
-        ));
-      },
-    );
-    test(
       'should return CountryStats when the response code is 200 (sucess)',
       () async {
         //arrange
