@@ -245,14 +245,126 @@ void main() {
   });
 
   group('GetLastCountry', () {
+    final tCountryStats = CountryStats(
+      country: 'Switzerland',
+      population: 1,
+      totalCases: 1,
+      newCases: 1,
+      totalDeaths: 1,
+      newDeaths: 1,
+      recovered: 1,
+      newRecovered: 1,
+    );
+
     test(
-      'should emit [Loaded], when there is a country cached',
+      'should call getLastCountryStats',
       () async {
         // arrange
-
+        when(mockGetLastCountryStats(any))
+            .thenAnswer((_) async => Right(tCountryStats));
         // act
-
+        bloc.add(GetLastCountry());
+        await untilCalled(mockGetLastCountryStats(any));
         // assert
+        verify(mockGetLastCountryStats(NoParams()));
+      },
+    );
+    test(
+      'should emit [Loaded] when there is a country cached',
+      () async {
+        // arrange
+        when(mockGetLastCountryStats(any))
+            .thenAnswer((_) async => Right(tCountryStats));
+
+        // assert later
+        final expected = [
+          Loaded(countryStats: tCountryStats),
+        ];
+        expectLater(bloc, emitsInOrder(expected));
+        // act
+        bloc.add(GetLastCountry());
+      },
+    );
+
+    test(
+      'should emit [Empty] when there is no country cached',
+      () async {
+        // arrange
+        when(mockGetLastCountryStats(any))
+            .thenAnswer((_) async => Left(CacheFailure()));
+        // assert later
+        final expected = [
+          Empty(),
+        ];
+        expectLater(bloc, emitsInOrder(expected));
+        // act
+        bloc.add(GetLastCountry());
+      },
+    );
+  });
+
+  group('GetFreshCountryStats', () {
+    final tCountry = 'Switzerland';
+
+    final tCountryStats = CountryStats(
+      country: 'Switzerland',
+      population: 1,
+      totalCases: 1,
+      newCases: 1,
+      totalDeaths: 1,
+      newDeaths: 1,
+      recovered: 1,
+      newRecovered: 1,
+    );
+
+    test(
+      'should call getConcreteCountryStats',
+      () async {
+        // arrange
+        when(mockGetConreteCountryStats(any))
+            .thenAnswer((realInvocation) async => Right(tCountryStats));
+        // act
+        final result = bloc.add(GetFreshCountryStats(tCountryStats));
+        await untilCalled(mockGetConreteCountryStats(any));
+        // assert
+        verify(mockGetConreteCountryStats(Params(country: tCountry)));
+      },
+    );
+
+    test(
+      'should emit [Refreshed] when the getCountryStats method returns countryStats',
+      () async {
+        // arrange
+        when(mockGetConreteCountryStats(any))
+            .thenAnswer((_) async => Right(tCountryStats));
+
+        // assert Later
+        final expected = [
+          Refreshed(
+              countryStats: tCountryStats,
+              message: SUCESSFULLY_REFRESHED_MESSAGE)
+        ];
+        expectLater(bloc, emitsInOrder(expected));
+        // act
+        bloc.add(GetFreshCountryStats(tCountryStats));
+      },
+    );
+
+    test(
+      'should emit [RefreshError], when getConcreteCountryStats returns Failure',
+      () async {
+        // arrange
+        when(mockGetConreteCountryStats(any))
+            .thenAnswer((_) async => Left(ServerFailure()));
+
+        // assert later
+        final expected = [
+          RefreshError(
+              message: SERVER_FAILURE_MESSAGE, countryStats: tCountryStats),
+        ];
+        expectLater(bloc, emitsInOrder(expected));
+        // act
+        bloc.add(GetFreshCountryStats(tCountryStats));
       },
     );
   });

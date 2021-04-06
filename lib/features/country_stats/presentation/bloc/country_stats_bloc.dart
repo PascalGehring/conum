@@ -68,16 +68,13 @@ class CountryStatsBloc extends Bloc<CountryStatsEvent, CountryStatsState> {
       clearCachedCountryStats(NoParams());
       yield Empty();
     } else if (event is GetLastCountry) {
-      print('debug');
       final failureOrCached = await getLastCountryStats(NoParams());
-      print(failureOrCached);
       yield* failureOrCached.fold((failure) async* {
         yield Empty();
       }, (stats) async* {
         yield Loaded(countryStats: stats);
       });
     } else if (event is GetFreshCountryStats) {
-      print('Getting Fresh Country Stats');
       final failureOrStats = await getConreteCountryStats(
           Params(country: event.countryStats.country));
       yield* failureOrStats.fold((failure) async* {
