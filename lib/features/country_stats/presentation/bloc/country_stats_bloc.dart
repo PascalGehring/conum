@@ -67,6 +67,7 @@ class CountryStatsBloc extends Bloc<CountryStatsEvent, CountryStatsState> {
     final inputEither = inputConverter.doesCountryExist(event.countryString);
 
     yield* inputEither.fold((failure) async* {
+      // TODO: Show first offline method
       yield Error(message: INVALID_INPUT_FAILURE_MESSAGE);
     }, (string) async* {
       yield Loading();

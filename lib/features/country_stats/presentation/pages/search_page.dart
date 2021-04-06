@@ -28,7 +28,7 @@ class SearchPage extends StatelessWidget {
                   // HapticFeedback.heavyImpact();
                   HapticFeedback.mediumImpact();
                   showSnackBar(
-                      context: context, message: state.message, isError: false);
+                      context: context, message: state.message, isError: true);
                   countryStatsBloc.add(ResetStateToEmpty());
                 }
               },
