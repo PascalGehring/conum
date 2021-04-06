@@ -1,7 +1,13 @@
+import 'package:conum/core/util/get_flag.dart';
 import 'package:conum/features/country_stats/domain/entities/country_stats.dart';
+import 'package:conum/features/country_stats/presentation/bloc/country_stats_bloc.dart';
+import 'package:conum/features/country_stats/presentation/pages/search_page.dart';
 import 'package:conum/features/country_stats/presentation/widgets/emoji.dart';
+import 'package:conum/features/country_stats/presentation/widgets/stateful_wrapper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class CountryPage extends StatelessWidget {
@@ -11,71 +17,91 @@ class CountryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(children: [
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
+    final countryStatsBloc = BlocProvider.of<CountryStatsBloc>(context);
+    return StatefulWrapper(
+      onInit: () {
+        BlocProvider.of<CountryStatsBloc>(context)
+            .add(GetFreshCountryStats(countryStats));
+      },
+      child: BlocListener(
+        cubit: countryStatsBloc,
+        listener: (BuildContext context, CountryStatsState state) {
+          if (state is Refreshed) {
+            HapticFeedback.mediumImpact();
+            showSnackBar(context, state.message, false);
+          } else if (state is RefreshError) {
+            // HapticFeedback.heavyImpact();
+            HapticFeedback.mediumImpact();
+            showSnackBar(context, state.message, true);
+          }
+        },
+        child: Scaffold(
+          body: SafeArea(
+            child: Column(children: [
               SizedBox(
-                width: 20,
+                height: 10,
               ),
-              IconButton(
-                  icon: Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.black,
-                    size: 25,
+              Row(
+                children: [
+                  SizedBox(
+                    width: 20,
                   ),
-                  onPressed: (() {
-                    Navigator.pop(context);
-                  })),
-            ],
-          ),
-          Center(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 10,
-                ),
-                Emoji(
-                  '🇨🇭',
-                  size: 70,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width - 50,
-                  height: 50,
-                  child: FittedBox(
-                    child: Text(
-                      countryStats.country,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, letterSpacing: -0.5),
+                  IconButton(
+                      icon: Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.black,
+                        size: 25,
+                      ),
+                      onPressed: (() {
+                        Navigator.pop(context);
+                      })),
+                ],
+              ),
+              Center(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 10,
                     ),
-                  ),
+                    Emoji(
+                      GetFlag().call(countryStats.country),
+                      size: 70,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width - 50,
+                      height: 50,
+                      child: FittedBox(
+                        child: Text(
+                          countryStats.country,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, letterSpacing: -0.5),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 70,
+                    ),
+                    NumberAndDescription(
+                      description: 'Cases',
+                      number: countryStats.totalCases,
+                      difference: countryStats.newCases,
+                    ),
+                    NumberAndDescription(
+                      description: 'Deaths',
+                      number: countryStats.totalDeaths,
+                      difference: countryStats.newDeaths,
+                    ),
+                    NumberAndDescription(
+                      description: 'Recovered',
+                      number: countryStats.recovered,
+                      difference: countryStats.newRecovered,
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: 70,
-                ),
-                NumberAndDescription(
-                  description: 'Cases',
-                  number: countryStats.totalCases,
-                  difference: countryStats.newCases,
-                ),
-                NumberAndDescription(
-                  description: 'Deaths',
-                  number: countryStats.totalDeaths,
-                  difference: countryStats.newDeaths,
-                ),
-                NumberAndDescription(
-                  description: 'Critical',
-                  number: countryStats.criticalPatients,
-                  difference: null,
-                ),
-              ],
-            ),
+              ),
+            ]),
           ),
-        ]),
+        ),
       ),
     );
   }
@@ -120,15 +146,16 @@ class NumberAndDescription extends StatelessWidget {
   }
 
   String _formatNumber(int number) {
+    if (number == 0) {
+      return '-';
+    }
     final formatter = NumberFormat.decimalPattern('de_ch');
     return formatter.format(number);
   }
 
   _addPrefixOrReturnBlank(int number) {
-    if (number == null) {
-      return '';
-    } else if (number == 0) {
-      return '+0';
+    if (number == 0) {
+      return '-';
     } else if (!number.isNegative) {
       return '+$difference';
     }

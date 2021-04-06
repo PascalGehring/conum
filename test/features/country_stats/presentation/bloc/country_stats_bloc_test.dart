@@ -2,7 +2,9 @@ import 'package:conum/core/error/failures.dart';
 import 'package:conum/core/usecases/usecase.dart';
 import 'package:conum/core/util/input_converter.dart';
 import 'package:conum/features/country_stats/domain/entities/country_stats.dart';
+import 'package:conum/features/country_stats/domain/usecases/clear_cached_country_stats.dart';
 import 'package:conum/features/country_stats/domain/usecases/get_concrete_country_stats.dart';
+import 'package:conum/features/country_stats/domain/usecases/get_last_country_stats.dart';
 import 'package:conum/features/country_stats/domain/usecases/get_random_country_stats.dart';
 import 'package:conum/features/country_stats/presentation/bloc/country_stats_bloc.dart';
 import 'package:dartz/dartz.dart';
@@ -14,23 +16,35 @@ class MockGetConreteCountryStats extends Mock
 
 class MockGetRandomCountryStats extends Mock implements GetRandomCountryStats {}
 
+class MockGetLastCountryStats extends Mock implements GetLastCountryStats {}
+
+class MockClearCachedCountryStats extends Mock
+    implements ClearCachedCountryStats {}
+
 class MockInputConverter extends Mock implements InputConverter {}
 
 void main() {
   CountryStatsBloc bloc;
   MockGetConreteCountryStats mockGetConreteCountryStats;
   MockGetRandomCountryStats mockGetRandomCountryStats;
+  MockGetLastCountryStats mockGetLastCountryStats;
+  MockClearCachedCountryStats mockClearCachedCountryStats;
   MockInputConverter mockInputConverter;
 
   setUp(() {
     mockGetConreteCountryStats = MockGetConreteCountryStats();
     mockGetRandomCountryStats = MockGetRandomCountryStats();
+    mockGetLastCountryStats = MockGetLastCountryStats();
+    mockClearCachedCountryStats = MockClearCachedCountryStats();
     mockInputConverter = MockInputConverter();
 
     bloc = CountryStatsBloc(
-        concrete: mockGetConreteCountryStats,
-        random: mockGetRandomCountryStats,
-        inputConverter: mockInputConverter);
+      concrete: mockGetConreteCountryStats,
+      random: mockGetRandomCountryStats,
+      inputConverter: mockInputConverter,
+      last: mockGetLastCountryStats,
+      clear: mockClearCachedCountryStats,
+    );
   });
 
   test('initial State should be Empty', () {
@@ -41,14 +55,14 @@ void main() {
   group('GetStatsForConcreteCountry', () {
     final tCountry = 'Switzerland';
     final tCountryStats = CountryStats(
-      country: tCountry,
-      population: 800,
-      totalCases: 1,
-      newCases: 1,
-      totalDeaths: 1,
-      newDeaths: 1,
-      criticalPatients: 1,
-    );
+        country: tCountry,
+        population: 1,
+        totalCases: 1,
+        newCases: 1,
+        totalDeaths: 1,
+        newDeaths: 1,
+        recovered: 1,
+        newRecovered: 1);
 
     setUpMockInputConverterSucess() {
       when(mockInputConverter.doesCountryExist(any))
@@ -156,12 +170,13 @@ void main() {
   group('GetStatsForRandomCountry', () {
     final tCountryStats = CountryStats(
       country: 'Switzerland',
-      population: 800,
+      population: 1,
       totalCases: 1,
       newCases: 1,
       totalDeaths: 1,
       newDeaths: 1,
-      criticalPatients: 1,
+      recovered: 1,
+      newRecovered: 1,
     );
 
     test(
@@ -225,6 +240,131 @@ void main() {
         expectLater(bloc, emitsInOrder(expected));
         // act
         bloc.add(GetStatsForRandomCountry());
+      },
+    );
+  });
+
+  group('GetLastCountry', () {
+    final tCountryStats = CountryStats(
+      country: 'Switzerland',
+      population: 1,
+      totalCases: 1,
+      newCases: 1,
+      totalDeaths: 1,
+      newDeaths: 1,
+      recovered: 1,
+      newRecovered: 1,
+    );
+
+    test(
+      'should call getLastCountryStats',
+      () async {
+        // arrange
+        when(mockGetLastCountryStats(any))
+            .thenAnswer((_) async => Right(tCountryStats));
+        // act
+        bloc.add(GetLastCountry());
+        await untilCalled(mockGetLastCountryStats(any));
+        // assert
+        verify(mockGetLastCountryStats(NoParams()));
+      },
+    );
+    test(
+      'should emit [Loaded] when there is a country cached',
+      () async {
+        // arrange
+        when(mockGetLastCountryStats(any))
+            .thenAnswer((_) async => Right(tCountryStats));
+
+        // assert later
+        final expected = [
+          Loaded(countryStats: tCountryStats),
+        ];
+        expectLater(bloc, emitsInOrder(expected));
+        // act
+        bloc.add(GetLastCountry());
+      },
+    );
+
+    test(
+      'should emit [Empty] when there is no country cached',
+      () async {
+        // arrange
+        when(mockGetLastCountryStats(any))
+            .thenAnswer((_) async => Left(CacheFailure()));
+        // assert later
+        final expected = [
+          Empty(),
+        ];
+        expectLater(bloc, emitsInOrder(expected));
+        // act
+        bloc.add(GetLastCountry());
+      },
+    );
+  });
+
+  group('GetFreshCountryStats', () {
+    final tCountry = 'Switzerland';
+
+    final tCountryStats = CountryStats(
+      country: 'Switzerland',
+      population: 1,
+      totalCases: 1,
+      newCases: 1,
+      totalDeaths: 1,
+      newDeaths: 1,
+      recovered: 1,
+      newRecovered: 1,
+    );
+
+    test(
+      'should call getConcreteCountryStats',
+      () async {
+        // arrange
+        when(mockGetConreteCountryStats(any))
+            .thenAnswer((realInvocation) async => Right(tCountryStats));
+        // act
+        final result = bloc.add(GetFreshCountryStats(tCountryStats));
+        await untilCalled(mockGetConreteCountryStats(any));
+        // assert
+        verify(mockGetConreteCountryStats(Params(country: tCountry)));
+      },
+    );
+
+    test(
+      'should emit [Refreshed] when the getCountryStats method returns countryStats',
+      () async {
+        // arrange
+        when(mockGetConreteCountryStats(any))
+            .thenAnswer((_) async => Right(tCountryStats));
+
+        // assert Later
+        final expected = [
+          Refreshed(
+              countryStats: tCountryStats,
+              message: SUCESSFULLY_REFRESHED_MESSAGE)
+        ];
+        expectLater(bloc, emitsInOrder(expected));
+        // act
+        bloc.add(GetFreshCountryStats(tCountryStats));
+      },
+    );
+
+    test(
+      'should emit [RefreshError], when getConcreteCountryStats returns Failure',
+      () async {
+        // arrange
+        when(mockGetConreteCountryStats(any))
+            .thenAnswer((_) async => Left(ServerFailure()));
+
+        // assert later
+        final expected = [
+          RefreshError(
+              message: SERVER_FAILURE_MESSAGE, countryStats: tCountryStats),
+        ];
+        expectLater(bloc, emitsInOrder(expected));
+        // act
+        bloc.add(GetFreshCountryStats(tCountryStats));
       },
     );
   });

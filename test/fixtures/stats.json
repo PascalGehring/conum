@@ -1,34 +1,13 @@
-{
-  "get": "statistics",
-  "parameters": {
-    "country": "switzerland"
-  },
-  "errors": [],
-  "results": 1,
-  "response": [
-    {
-      "continent": "Europe",
-      "country": "Switzerland",
-      "population": 1,
-      "cases": {
-        "new": "-1",
-        "active": 1,
-        "critical": 1,
-        "recovered": 1,
-        "1M_pop": "1",
-        "total": 1
-      },
-      "deaths": {
-        "new": "+1",
-        "1M_pop": "1",
-        "total": 1
-      },
-      "tests": {
-        "1M_pop": "1",
-        "total": 1
-      },
-      "day": "2021-02-27",
-      "time": "2021-02-27T17:30:28+00:00"
-    }
-  ]
-}
+[{"_id":"60634319bd49fa8c7ccfad20",
+  "uids":[756],
+  "confirmed":1,
+  "deaths":1,
+  "country":"Switzerland",
+  "date":"2021-03-29T00:00:00.000Z",
+  "country_iso2s":["CH"],"country_iso3s":["CHE"],
+  "country_codes":[756],"combined_names":["Switzerland"],
+  "population":1,
+  "recovered":1,
+  "confirmed_daily":1,
+  "deaths_daily":1,
+  "recovered_daily":1}]

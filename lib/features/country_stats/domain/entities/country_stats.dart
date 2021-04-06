@@ -8,7 +8,8 @@ class CountryStats extends Equatable {
   final int newCases;
   final int totalDeaths;
   final int newDeaths;
-  final int criticalPatients;
+  final int recovered;
+  final int newRecovered;
 
   CountryStats({
     @required this.country,
@@ -17,7 +18,8 @@ class CountryStats extends Equatable {
     @required this.newCases,
     @required this.totalDeaths,
     @required this.newDeaths,
-    @required this.criticalPatients,
+    @required this.recovered,
+    @required this.newRecovered,
   });
 
   @override
@@ -28,6 +30,7 @@ class CountryStats extends Equatable {
         newCases,
         totalDeaths,
         newDeaths,
-        criticalPatients,
+        recovered,
+        newRecovered,
       ];
 }

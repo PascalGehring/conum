@@ -1,10 +1,9 @@
 import 'dart:convert';
 
 import 'package:conum/core/error/exceptions.dart';
-import 'package:conum/core/error/failures.dart';
 import 'package:conum/features/country_stats/data/datasources/country_stats_local_data_source.dart';
 import 'package:conum/features/country_stats/data/models/country_stats_model.dart';
-import 'package:flutter/material.dart';
+
 import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -58,10 +57,11 @@ void main() {
         country: 'Switzerland',
         population: 1,
         totalCases: 1,
-        newCases: -1,
+        newCases: 1,
         totalDeaths: 1,
         newDeaths: 1,
-        criticalPatients: 1,
+        recovered: 1,
+        newRecovered: 1,
       );
       test(
         'should call SharedPreferences to cache the data',
@@ -72,6 +72,21 @@ void main() {
           final expectedJsonString = json.encode(tcountryStatsModel);
           verify(mockSharedPreferences.setString(
               CACHED_COUNTRY_STATS, expectedJsonString));
+        },
+      );
+    });
+
+    group('clearCachedCountryStats', () {
+      test(
+        'should call sharedPreferences.clear',
+        () async {
+          // arrange
+
+          // act
+          dataSource.clearCachedCountryStats();
+          // assert
+          verify(mockSharedPreferences.clear());
+          verifyNoMoreInteractions(mockSharedPreferences);
         },
       );
     });

@@ -19,3 +19,14 @@ class GetStatsForConcreteCountry extends CountryStatsEvent {
 class GetStatsForRandomCountry extends CountryStatsEvent {}
 
 class ResetStateToEmpty extends CountryStatsEvent {}
+
+class GetLastCountry extends CountryStatsEvent {}
+
+class GetFreshCountryStats extends CountryStatsEvent {
+  final CountryStats countryStats;
+
+  GetFreshCountryStats(this.countryStats);
+
+  @override
+  List<Object> get props => [countryStats];
+}

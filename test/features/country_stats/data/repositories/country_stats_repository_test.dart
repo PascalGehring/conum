@@ -36,12 +36,13 @@ void main() {
     final tCountry = 'Switzerland';
     final tCountryStatsModel = CountryStatsModel(
       country: 'Switzerland',
-      population: 1,
+      population: 0,
       totalCases: 0,
       newCases: 0,
       totalDeaths: 0,
       newDeaths: 0,
-      criticalPatients: 0,
+      recovered: 0,
+      newRecovered: 0,
     );
     final CountryStats tCountryStats = tCountryStatsModel;
     test(
@@ -108,13 +109,28 @@ void main() {
       });
 
       test(
+        'should return [OfflineFailure] when device is offline',
+        () async {
+          // arrange
+
+          // act
+          final result = await repository.getCountryStats(tCountry);
+          // assert
+          verifyZeroInteractions(mockRemoteDataSource);
+          expect(result, equals(Left(OfflineFailure())));
+        },
+      );
+    });
+
+    group('getLastCountryStats', () {
+      test(
         'should return last locally cached data when the cached data is present',
         () async {
           // arrange
           when(mockLocalDataSource.getLastCountryStats())
               .thenAnswer((_) async => tCountryStatsModel);
           // act
-          final result = await repository.getCountryStats(tCountry);
+          final result = await repository.getCachedCountryStats();
           // assert
           verifyZeroInteractions(mockRemoteDataSource);
           verify(mockLocalDataSource.getLastCountryStats());
@@ -127,11 +143,25 @@ void main() {
           // arrange
           when(mockLocalDataSource.getLastCountryStats())
               .thenThrow(CacheException());
-          final result = await repository.getCountryStats(tCountry);
+          final result = await repository.getCachedCountryStats();
           // assert
           verifyZeroInteractions(mockRemoteDataSource);
           verify(mockLocalDataSource.getLastCountryStats());
           expect(result, equals(Left(CacheFailure())));
+        },
+      );
+    });
+
+    group('clearCachedCountryStats', () {
+      test(
+        'should call clearCachedCountryStats from repository',
+        () async {
+          // arrange
+
+          // act
+          await repository.clearCachedCountryStats();
+          // assert
+          verify(mockLocalDataSource.clearCachedCountryStats());
         },
       );
     });

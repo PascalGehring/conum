@@ -5,7 +5,9 @@ import 'package:conum/core/error/failures.dart';
 import 'package:conum/core/usecases/usecase.dart';
 import 'package:conum/core/util/input_converter.dart';
 import 'package:conum/features/country_stats/domain/entities/country_stats.dart';
+import 'package:conum/features/country_stats/domain/usecases/clear_cached_country_stats.dart';
 import 'package:conum/features/country_stats/domain/usecases/get_concrete_country_stats.dart';
+import 'package:conum/features/country_stats/domain/usecases/get_last_country_stats.dart';
 import 'package:conum/features/country_stats/domain/usecases/get_random_country_stats.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
@@ -18,21 +20,29 @@ const String SERVER_FAILURE_MESSAGE = 'Server Failure';
 const String CACHE_FAILURE_MESSAGE = 'Cache Failure';
 const String INVALID_INPUT_FAILURE_MESSAGE = 'The country does not exist.';
 const String OFFLINE_FAILURE_MESSAGE = 'You seem to be offline.';
+const String SUCESSFULLY_REFRESHED_MESSAGE = 'Everthing is up to date.';
 
 class CountryStatsBloc extends Bloc<CountryStatsEvent, CountryStatsState> {
   final GetConreteCountryStats getConreteCountryStats;
   final GetRandomCountryStats getRandomCountryStats;
+  final GetLastCountryStats getLastCountryStats;
+  final ClearCachedCountryStats clearCachedCountryStats;
   final InputConverter inputConverter;
 
   CountryStatsBloc({
     @required GetConreteCountryStats concrete,
     @required GetRandomCountryStats random,
+    @required GetLastCountryStats last,
+    @required ClearCachedCountryStats clear,
     @required this.inputConverter,
   })  : assert(concrete != null),
         assert(random != null),
+        assert(last != null),
         assert(inputConverter != null),
         getConreteCountryStats = concrete,
         getRandomCountryStats = random,
+        getLastCountryStats = last,
+        clearCachedCountryStats = clear,
         super(Empty());
 
   @override
@@ -55,7 +65,26 @@ class CountryStatsBloc extends Bloc<CountryStatsEvent, CountryStatsState> {
       final failureOrStats = await getRandomCountryStats(NoParams());
       yield* _eitherLoadedOrErrorState(failureOrStats);
     } else if (event is ResetStateToEmpty) {
+      clearCachedCountryStats(NoParams());
       yield Empty();
+    } else if (event is GetLastCountry) {
+      final failureOrCached = await getLastCountryStats(NoParams());
+      yield* failureOrCached.fold((failure) async* {
+        yield Empty();
+      }, (stats) async* {
+        yield Loaded(countryStats: stats);
+      });
+    } else if (event is GetFreshCountryStats) {
+      final failureOrStats = await getConreteCountryStats(
+          Params(country: event.countryStats.country));
+      yield* failureOrStats.fold((failure) async* {
+        yield RefreshError(
+            message: _mapFailureToMessage(failure),
+            countryStats: event.countryStats);
+      }, (stats) async* {
+        yield Refreshed(
+            countryStats: stats, message: SUCESSFULLY_REFRESHED_MESSAGE);
+      });
     }
   }
 

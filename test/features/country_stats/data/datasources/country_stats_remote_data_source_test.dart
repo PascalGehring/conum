@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 import 'package:conum/core/error/exceptions.dart';
-import 'package:conum/core/error/failures.dart';
 import 'package:conum/features/country_stats/data/datasources/country_stats_remote_data_source.dart';
 import 'package:conum/features/country_stats/data/models/country_stats_model.dart';
-import 'package:flutter/material.dart';
 import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -22,6 +20,12 @@ void main() {
     dataSource = CountryStatsRemoteDataSourceImpl(client: mockHttpClient);
   });
 
+  String tCountry = 'Switzerland';
+  String tTime = '2021-03-29T00:00:00.000Z';
+
+  String url =
+      'https://webhooks.mongodb-stitch.com/api/client/v2.0/app/covid-19-qppza/service/REST-API/incoming_webhook/countries_summary?country=$tCountry&min_date=$tTime&max_date=$tTime';
+
   void setUpMockHttpClientSucess200() {
     when(mockHttpClient.get(any, headers: anyNamed('headers')))
         .thenAnswer((_) async => http.Response(fixture('stats.json'), 200));
@@ -37,23 +41,6 @@ void main() {
     final tCountryStatsModel =
         CountryStatsModel.fromRemoteJson(json.decode(fixture('stats.json')));
 
-    test(
-      '''should perform a GET request on a URL with ?Country as the endpoint 
-      and x-rapidapi-key header''',
-      () async {
-        //arrange
-        setUpMockHttpClientSucess200();
-        // act
-        dataSource.getCountryStats(tCountry);
-        // assert
-        verify(mockHttpClient.get(
-            'https://covid-193.p.rapidapi.com/statistics?country=$tCountry',
-            headers: {
-              'x-rapidapi-key':
-                  '44adf06adamshba38826ba7ceef2p12851djsnacfbc18c4ed7',
-            }));
-      },
-    );
     test(
       'should return CountryStats when the response code is 200 (sucess)',
       () async {
