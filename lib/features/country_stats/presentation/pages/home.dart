@@ -24,8 +24,6 @@ class Home extends StatelessWidget {
             return buildCountryPage(state.countryStats, key, context);
           } else if (state is Error) {
             if (state.message == CACHE_FAILURE_MESSAGE) return SearchPage();
-            // if (state.message == OFFLINE_FAILURE_MESSAGE)
-            //   return CountryPage(key: key, countryStats: ,);
           } else if (state is Refreshed) {
             return buildCountryPage(state.countryStats, key, context);
           } else if (state is RefreshError) {

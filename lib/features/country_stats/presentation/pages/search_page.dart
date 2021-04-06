@@ -27,7 +27,8 @@ class SearchPage extends StatelessWidget {
                 if (state is Error) {
                   // HapticFeedback.heavyImpact();
                   HapticFeedback.mediumImpact();
-                  showSnackBar(context, state.message, false);
+                  showSnackBar(
+                      context: context, message: state.message, isError: false);
                   countryStatsBloc.add(ResetStateToEmpty());
                 }
               },
@@ -72,14 +73,17 @@ class SearchPage extends StatelessWidget {
   }
 }
 
-showSnackBar(BuildContext context, String message, bool error) {
+showSnackBar(
+    {@required BuildContext context,
+    @required String message,
+    @required bool isError}) {
   return showFlash(
       context: context,
       duration: const Duration(seconds: 2),
       builder: (context, controller) {
         return Flash.bar(
             controller: controller,
-            backgroundColor: error ? Colors.red : Colors.green,
+            backgroundColor: isError ? Colors.red : Colors.green,
             position: FlashPosition.bottom,
             enableDrag: true,
             margin: const EdgeInsets.all(8),
