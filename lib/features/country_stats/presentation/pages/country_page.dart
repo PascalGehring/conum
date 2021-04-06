@@ -2,6 +2,7 @@ import 'package:conum/core/util/get_flag.dart';
 import 'package:conum/features/country_stats/domain/entities/country_stats.dart';
 import 'package:conum/features/country_stats/presentation/bloc/country_stats_bloc.dart';
 import 'package:conum/features/country_stats/presentation/pages/search_page.dart';
+import 'package:conum/features/country_stats/presentation/widgets/back_button.dart';
 import 'package:conum/features/country_stats/presentation/widgets/country_display.dart';
 import 'package:conum/features/country_stats/presentation/widgets/emoji.dart';
 import 'package:conum/features/country_stats/presentation/widgets/number_and_description.dart';
@@ -50,7 +51,7 @@ class CountryPage extends StatelessWidget {
                     SizedBox(
                       height: 10,
                     ),
-                    BackButton(),
+                    BlackBackButton(),
                     Emoji(
                       GetFlag().call(countryStats.country),
                       size: 70,
