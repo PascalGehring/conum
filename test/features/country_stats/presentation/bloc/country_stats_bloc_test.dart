@@ -2,7 +2,9 @@ import 'package:conum/core/error/failures.dart';
 import 'package:conum/core/usecases/usecase.dart';
 import 'package:conum/core/util/input_converter.dart';
 import 'package:conum/features/country_stats/domain/entities/country_stats.dart';
+import 'package:conum/features/country_stats/domain/usecases/clear_cached_country_stats.dart';
 import 'package:conum/features/country_stats/domain/usecases/get_concrete_country_stats.dart';
+import 'package:conum/features/country_stats/domain/usecases/get_last_country_stats.dart';
 import 'package:conum/features/country_stats/domain/usecases/get_random_country_stats.dart';
 import 'package:conum/features/country_stats/presentation/bloc/country_stats_bloc.dart';
 import 'package:dartz/dartz.dart';
@@ -14,7 +16,10 @@ class MockGetConreteCountryStats extends Mock
 
 class MockGetRandomCountryStats extends Mock implements GetRandomCountryStats {}
 
-class MockGetLastCountry extends Mock implements GetLastCountry {}
+class MockGetLastCountryStats extends Mock implements GetLastCountryStats {}
+
+class MockClearCachedCountryStats extends Mock
+    implements ClearCachedCountryStats {}
 
 class MockInputConverter extends Mock implements InputConverter {}
 
@@ -22,20 +27,23 @@ void main() {
   CountryStatsBloc bloc;
   MockGetConreteCountryStats mockGetConreteCountryStats;
   MockGetRandomCountryStats mockGetRandomCountryStats;
-  MockGetLastCountry mockGetLastCountry;
+  MockGetLastCountryStats mockGetLastCountryStats;
+  MockClearCachedCountryStats mockClearCachedCountryStats;
   MockInputConverter mockInputConverter;
 
   setUp(() {
     mockGetConreteCountryStats = MockGetConreteCountryStats();
     mockGetRandomCountryStats = MockGetRandomCountryStats();
-    mockGetLastCountry = MockGetLastCountry();
+    mockGetLastCountryStats = MockGetLastCountryStats();
+    mockClearCachedCountryStats = MockClearCachedCountryStats();
     mockInputConverter = MockInputConverter();
 
     bloc = CountryStatsBloc(
       concrete: mockGetConreteCountryStats,
       random: mockGetRandomCountryStats,
       inputConverter: mockInputConverter,
-      //last: mockGetLastCountry,
+      last: mockGetLastCountryStats,
+      clear: mockClearCachedCountryStats,
     );
   });
 

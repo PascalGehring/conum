@@ -121,33 +121,33 @@ void main() {
         },
       );
 
-      // test(
-      //   'should return last locally cached data when the cached data is present',
-      //   () async {
-      //     // arrange
-      //     when(mockLocalDataSource.getLastCountryStats())
-      //         .thenAnswer((_) async => tCountryStatsModel);
-      //     // act
-      //     final result = await repository.getCountryStats(tCountry);
-      //     // assert
-      //     verifyZeroInteractions(mockRemoteDataSource);
-      //     verify(mockLocalDataSource.getLastCountryStats());
-      //     expect(result, equals(Right(tCountryStats)));
-      //   },
-      // );
-      // test(
-      //   'should return CacheFailure when there is no Cached data present',
-      //   () async {
-      //     // arrange
-      //     when(mockLocalDataSource.getLastCountryStats())
-      //         .thenThrow(CacheException());
-      //     final result = await repository.getCountryStats(tCountry);
-      //     // assert
-      //     verifyZeroInteractions(mockRemoteDataSource);
-      //     verify(mockLocalDataSource.getLastCountryStats());
-      //     expect(result, equals(Left(CacheFailure())));
-      //   },
-      // );
+      test(
+        'should return last locally cached data when the cached data is present',
+        () async {
+          // arrange
+          when(mockLocalDataSource.getLastCountryStats())
+              .thenAnswer((_) async => tCountryStatsModel);
+          // act
+          final result = await repository.getCountryStats(tCountry);
+          // assert
+          verifyZeroInteractions(mockRemoteDataSource);
+          verify(mockLocalDataSource.getLastCountryStats());
+          expect(result, equals(Right(tCountryStats)));
+        },
+      );
+      test(
+        'should return CacheFailure when there is no Cached data present',
+        () async {
+          // arrange
+          when(mockLocalDataSource.getLastCountryStats())
+              .thenThrow(CacheException());
+          final result = await repository.getCountryStats(tCountry);
+          // assert
+          verifyZeroInteractions(mockRemoteDataSource);
+          verify(mockLocalDataSource.getLastCountryStats());
+          expect(result, equals(Left(CacheFailure())));
+        },
+      );
     });
   });
 }
