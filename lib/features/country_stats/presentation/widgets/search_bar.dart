@@ -7,8 +7,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchBar extends StatefulWidget {
   final BuildContext context;
+  final ScrollController scrollController;
 
-  const SearchBar({Key key, @required this.context}) : super(key: key);
+  const SearchBar(
+      {Key key, @required this.context, @required this.scrollController})
+      : super(key: key);
 
   @override
   _SearchBarState createState() => _SearchBarState();
@@ -58,6 +61,11 @@ class _SearchBarState extends State<SearchBar> {
                       setState(() {
                         value = str;
                         if (str != '') {
+                          if (str.length == 1) {
+                            widget.scrollController.animateTo(173,
+                                duration: Duration(milliseconds: 300),
+                                curve: Curves.decelerate);
+                          }
                           suggestions = _getSuggestions(str);
                         } else {
                           suggestions = [];

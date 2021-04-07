@@ -13,6 +13,7 @@ class SearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final countryStatsBloc = BlocProvider.of<CountryStatsBloc>(context);
+    final ScrollController scrollController = ScrollController();
     return StatefulWrapper(
       onInit: () {
         BlocProvider.of<CountryStatsBloc>(context).add(GetLastCountry());
@@ -33,6 +34,7 @@ class SearchPage extends StatelessWidget {
                 }
               },
               child: SingleChildScrollView(
+                controller: scrollController,
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -45,6 +47,7 @@ class SearchPage extends StatelessWidget {
                       ),
                       SearchBar(
                         context: context,
+                        scrollController: scrollController,
                       ),
                       Padding(
                         padding: const EdgeInsets.all(20.0),
