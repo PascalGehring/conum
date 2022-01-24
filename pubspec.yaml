@@ -36,8 +36,10 @@ dependencies:
   intl: ^0.17.0
   # Icons
   font_awesome: ^5.10.1
-  
+  # ffi
   ffi: ^1.0.0
+  # # url launcher
+  # url_launcher: ^6.0.18
 
 dev_dependencies:
   flutter_test:

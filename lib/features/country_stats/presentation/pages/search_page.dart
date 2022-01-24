@@ -57,7 +57,10 @@ class SearchPage extends StatelessWidget {
                                 fontSize: 16, color: Colors.grey[700]),
                           ),
                         ),
-                      )
+                      ),
+                      // Padding(
+                      //     padding: const EdgeInsets.all(20.0),
+                      //     child: Text('Powered by: JHU CSSE COVID-19 Data')),
                     ],
                   ),
                 ),
