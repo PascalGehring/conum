@@ -36,11 +36,13 @@ dependencies:
   intl: ^0.17.0
   # Icons
   font_awesome: ^5.10.1
+  
+  ffi: ^1.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mockito: ^4.1.0
+  mockito: ^5.0.17
 
 flutter:
   uses-material-design: true
