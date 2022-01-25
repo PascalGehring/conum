@@ -18,6 +18,9 @@ class CountryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final countryStatsBloc = BlocProvider.of<CountryStatsBloc>(context);
+
+    double height = MediaQuery.of(context).size.height;
+
     return StatefulWrapper(
       onInit: () {
         BlocProvider.of<CountryStatsBloc>(context)
@@ -38,9 +41,7 @@ class CountryPage extends StatelessWidget {
         child: Scaffold(
           body: SafeArea(
             child: Column(children: [
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: height * 0.0004),
               Row(
                 children: [
                   SizedBox(
@@ -61,7 +62,7 @@ class CountryPage extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: 10,
+                      height: height * 0.0004,
                     ),
                     Emoji(
                       GetFlag().call(countryStats.country),
