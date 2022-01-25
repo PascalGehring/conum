@@ -50,45 +50,67 @@ class CountryStatsBloc extends Bloc<CountryStatsEvent, CountryStatsState> {
     CountryStatsEvent event,
   ) async* {
     if (event is GetStatsForConcreteCountry) {
-      final inputEither = inputConverter.doesCountryExist(event.countryString);
-
-      yield* inputEither.fold((failure) async* {
-        yield Error(message: INVALID_INPUT_FAILURE_MESSAGE);
-      }, (string) async* {
-        yield Loading();
-        final failureOrStats =
-            await getConreteCountryStats(Params(country: string));
-        yield* _eitherLoadedOrErrorState(failureOrStats);
-      });
+      yield* _handleGetStatsForConcreteNumber(event);
     } else if (event is GetStatsForRandomCountry) {
-      yield Loading();
-      final failureOrStats = await getRandomCountryStats(NoParams());
-      yield* _eitherLoadedOrErrorState(failureOrStats);
+      yield* _handleGetStatsForRandomNumber(event);
     } else if (event is ResetStateToEmpty) {
-      clearCachedCountryStats(NoParams());
-      yield Empty();
+      yield* _handleResetStateToEmpty(event);
     } else if (event is GetLastCountry) {
-      print('debug');
-      final failureOrCached = await getLastCountryStats(NoParams());
-      print(failureOrCached);
-      yield* failureOrCached.fold((failure) async* {
-        yield Empty();
-      }, (stats) async* {
-        yield Loaded(countryStats: stats);
-      });
+      yield* _handleGetLastCountry(event);
     } else if (event is GetFreshCountryStats) {
-      print('Getting Fresh Country Stats');
-      final failureOrStats = await getConreteCountryStats(
-          Params(country: event.countryStats.country));
-      yield* failureOrStats.fold((failure) async* {
-        yield RefreshError(
-            message: _mapFailureToMessage(failure),
-            countryStats: event.countryStats);
-      }, (stats) async* {
-        yield Refreshed(
-            countryStats: stats, message: SUCESSFULLY_REFRESHED_MESSAGE);
-      });
+      yield* _handlegetFreshCountryStats(event);
     }
+  }
+
+  Stream<CountryStatsState> _handleGetStatsForConcreteNumber(
+      GetStatsForConcreteCountry event) async* {
+    final inputEither = inputConverter.doesCountryExist(event.countryString);
+
+    yield* inputEither.fold((failure) async* {
+      // TODO: Show first offline method
+      yield Error(message: INVALID_INPUT_FAILURE_MESSAGE);
+    }, (string) async* {
+      yield Loading();
+      final failureOrStats =
+          await getConreteCountryStats(Params(country: string));
+      yield* _eitherLoadedOrErrorState(failureOrStats);
+    });
+  }
+
+  Stream<CountryStatsState> _handleGetStatsForRandomNumber(
+      GetStatsForRandomCountry event) async* {
+    yield Loading();
+    final failureOrStats = await getRandomCountryStats(NoParams());
+    yield* _eitherLoadedOrErrorState(failureOrStats);
+  }
+
+  Stream<CountryStatsState> _handleResetStateToEmpty(
+      ResetStateToEmpty event) async* {
+    clearCachedCountryStats(NoParams());
+    yield Empty();
+  }
+
+  Stream<CountryStatsState> _handleGetLastCountry(GetLastCountry event) async* {
+    final failureOrCached = await getLastCountryStats(NoParams());
+    yield* failureOrCached.fold((failure) async* {
+      yield Empty();
+    }, (stats) async* {
+      yield Loaded(countryStats: stats);
+    });
+  }
+
+  Stream<CountryStatsState> _handlegetFreshCountryStats(
+      GetFreshCountryStats event) async* {
+    final failureOrStats = await getConreteCountryStats(
+        Params(country: event.countryStats.country));
+    yield* failureOrStats.fold((failure) async* {
+      yield RefreshError(
+          message: _mapFailureToMessage(failure),
+          countryStats: event.countryStats);
+    }, (stats) async* {
+      yield Refreshed(
+          countryStats: stats, message: SUCESSFULLY_REFRESHED_MESSAGE);
+    });
   }
 
   Stream<CountryStatsState> _eitherLoadedOrErrorState(

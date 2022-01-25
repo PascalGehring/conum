@@ -120,7 +120,9 @@ void main() {
           expect(result, equals(Left(OfflineFailure())));
         },
       );
+    });
 
+    group('getLastCountryStats', () {
       test(
         'should return last locally cached data when the cached data is present',
         () async {
@@ -128,7 +130,7 @@ void main() {
           when(mockLocalDataSource.getLastCountryStats())
               .thenAnswer((_) async => tCountryStatsModel);
           // act
-          final result = await repository.getCountryStats(tCountry);
+          final result = await repository.getCachedCountryStats();
           // assert
           verifyZeroInteractions(mockRemoteDataSource);
           verify(mockLocalDataSource.getLastCountryStats());
@@ -141,11 +143,25 @@ void main() {
           // arrange
           when(mockLocalDataSource.getLastCountryStats())
               .thenThrow(CacheException());
-          final result = await repository.getCountryStats(tCountry);
+          final result = await repository.getCachedCountryStats();
           // assert
           verifyZeroInteractions(mockRemoteDataSource);
           verify(mockLocalDataSource.getLastCountryStats());
           expect(result, equals(Left(CacheFailure())));
+        },
+      );
+    });
+
+    group('clearCachedCountryStats', () {
+      test(
+        'should call clearCachedCountryStats from repository',
+        () async {
+          // arrange
+
+          // act
+          await repository.clearCachedCountryStats();
+          // assert
+          verify(mockLocalDataSource.clearCachedCountryStats());
         },
       );
     });

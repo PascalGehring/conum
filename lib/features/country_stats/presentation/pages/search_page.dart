@@ -13,6 +13,7 @@ class SearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final countryStatsBloc = BlocProvider.of<CountryStatsBloc>(context);
+    final ScrollController scrollController = ScrollController();
     return StatefulWrapper(
       onInit: () {
         BlocProvider.of<CountryStatsBloc>(context).add(GetLastCountry());
@@ -27,11 +28,13 @@ class SearchPage extends StatelessWidget {
                 if (state is Error) {
                   // HapticFeedback.heavyImpact();
                   HapticFeedback.mediumImpact();
-                  showSnackBar(context, state.message, false);
+                  showSnackBar(
+                      context: context, message: state.message, isError: true);
                   countryStatsBloc.add(ResetStateToEmpty());
                 }
               },
               child: SingleChildScrollView(
+                controller: scrollController,
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -44,6 +47,7 @@ class SearchPage extends StatelessWidget {
                       ),
                       SearchBar(
                         context: context,
+                        scrollController: scrollController,
                       ),
                       Padding(
                         padding: const EdgeInsets.all(20.0),
@@ -75,14 +79,17 @@ class SearchPage extends StatelessWidget {
   }
 }
 
-showSnackBar(BuildContext context, String message, bool error) {
+showSnackBar(
+    {@required BuildContext context,
+    @required String message,
+    @required bool isError}) {
   return showFlash(
       context: context,
       duration: const Duration(seconds: 2),
       builder: (context, controller) {
         return Flash.bar(
             controller: controller,
-            backgroundColor: error ? Colors.red : Colors.green,
+            backgroundColor: isError ? Colors.red : Colors.green,
             position: FlashPosition.bottom,
             enableDrag: true,
             margin: const EdgeInsets.all(8),
