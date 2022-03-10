@@ -46,5 +46,5 @@ class Refreshed extends CountryStatsState {
   Refreshed({@required this.countryStats, @required this.message});
 
   @override
-  List<Object> get props => [countryStats];
+  List<Object> get props => [countryStats, message];
 }

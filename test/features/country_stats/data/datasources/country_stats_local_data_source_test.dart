@@ -75,5 +75,20 @@ void main() {
         },
       );
     });
+
+    group('clearCachedCountryStats', () {
+      test(
+        'should call sharedPreferences.clear',
+        () async {
+          // arrange
+
+          // act
+          dataSource.clearCachedCountryStats();
+          // assert
+          verify(mockSharedPreferences.clear());
+          verifyNoMoreInteractions(mockSharedPreferences);
+        },
+      );
+    });
   });
 }
